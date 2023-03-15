@@ -1,7 +1,39 @@
-import pandas as pd
+# ===================== #
+# Clean data prior to outlier analysis #
+# ===================== #
+# Author:   Jesse Wolf, jwolf@uoguelph.ca | Thomas Papp-Simon, tpappsim@uoguelph.ca
+# Date:     March 15, 2023
 
-gamedat = pd.read_csv(r"C:\Users\thoma\Documents\BINF-Sem2\ANSC6100\NBA_Machine_Learning\NBApredictor\gamedata.csv")
-teamdat = pd.read_csv(r"C:\Users\thoma\Documents\BINF-Sem2\ANSC6100\NBA_Machine_Learning\NBApredictor\combinedTeamData.csv")
+# How to run:   python3  dataCleaning.py  -gamedata gamedata.csv -teamdata combinedTeamData.csv
+# ================= #
+
+# Import relevant libraries
+import pandas as pd
+import argparse
+import sys
+
+# define command line arguments
+parser = argparse.ArgumentParser(description='Data cleaning')
+parser.add_argument('--game_file', '-gamedata', action="store", dest='gameData_in_file', required=True, help='Name of csv input file for game data.')
+parser.add_argument('--team_file', '-teamdata', action="store", dest='teamData_in_file', required=True, help='Name of csv input file for team data.')
+
+# handle user errors
+try:
+    args = parser.parse_args()
+except:
+    parser.print_help()
+    sys.exit(0)
+
+# save arguments in separate variables
+game_filename = args.gameData_in_file
+team_filename = args.teamData_in_file
+
+# load the dataset
+gamedat = pd.read_csv(game_filename)
+teamdat = pd.read_csv (team_filename)
+
+#gamedat = pd.read_csv(r"C:\Users\Admin\Documents\MBINF\ANSC6100\NBApredictor-1\gamedata.csv")
+#teamdat = pd.read_csv(r"C:\Users\Admin\Documents\MBINF\ANSC6100\NBApredictor-1\combinedTeamData.csv")
 
 # Renaming values containing 'LA Clippers' to 'Los Angeles Clippers' for consistency
 gamedat['team_name_home'] = gamedat['team_name_home'].replace(to_replace="LA Clippers", value="Los Angeles Clippers")
@@ -14,7 +46,7 @@ teamdat_cleaned = teamdat[['Team', 'FG.', 'X3P.', 'X2P.', 'FT.', 'DRB', 'ORB', '
 
 merged_df = pd.merge(gamedat_cleaned, teamdat_cleaned, on=['game_yearEnd', 'Team'], how='left')
 
-merged_df.to_csv('NBApredictor/merged_df.csv', index=False)
+merged_df.to_csv('merged_df.csv', index=False)
 
 # Data pre-processing (missing values)
 
