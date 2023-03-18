@@ -13,6 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 import sys
+from pandas.api.types import is_numeric_dtype
 
 # define command line arguments
 parser = argparse.ArgumentParser(description='Outlier Detection')
@@ -77,4 +78,16 @@ for col in cols_to_analyze:
     #reset_index() method is called on the new non-outlier data to reset its index before assigning it to the dataframe column. The drop=True argument is used to drop the old index and replace it with a new one that starts from 0. This ensures that the new data has the same length as the dataframe index and can be assigned to the column without raising a ValueError.
     df[col] = pd.Series(data_outliers_removed).reset_index(drop=True)
 
+# Create a for loop to iterate over all columns in the the dataframe and replace NAs with mean values.
+for col in df.columns:
+    if (is_numeric_dtype(df[col])):
+        df[col] = df[col].replace(np.NaN,df[col].mean())
+
+# Interpolate missing data to avoid NAs - this is one option to deal with NAs, we can also impute with mean, or drop NA's
+#df_filtered = df.interpolate(method = "linear", limit_direction="both", axis = 0)
+
+# Drop NAs
+# df.dropna(inplace=True)
+
+# Write to new file
 df.to_csv ('merged_df_outliers_removed.csv', index = False)
