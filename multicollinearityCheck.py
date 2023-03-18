@@ -46,7 +46,7 @@ mask = np.triu(np.ones_like(df_slice.corr(), dtype=bool))
 # generate heatmap
 sns.heatmap(df_slice.corr(), annot=True, mask=mask, vmin=-1, vmax=1)
 plt.title('Correlation Coefficient Of Predictors')
-plt.savefig(f'predictorCorrelationMatrix.png')
+plt.savefig(f'collinearityPlots/predictorCorrelationMatrix.png')
 #plt.show()
 
 # compute the vif for all given features
@@ -96,5 +96,5 @@ mask = np.triu(np.ones_like(df_slice.corr(), dtype=bool))
 # generate heatmap
 sns.heatmap(df_slice.corr(), annot=True, mask=mask, vmin=-1, vmax=1)
 plt.title('Correlation Coefficient Of Predictors')
-plt.savefig(f'predictorCorrelationMatrix_reduced.png')
+plt.savefig(f'collinearityPlots/predictorCorrelationMatrix_reduced.png')
 #plt.show()
