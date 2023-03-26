@@ -32,9 +32,10 @@ varray = df.values
 # ncols = len(varray[0,:])-1
 X = varray[:,13:] # All continuous variables
 Y = varray[:,8] # Win/Loss
+print(Y)
 
 # Feature selection
-model = LogisticRegression(solver='lbfgs', max_iter=500)
+model = LogisticRegression(solver='lbfgs', max_iter=1)
 rfe = RFE(model, n_features_to_select = 10)
 fit = rfe.fit(X,Y.astype(float))
 print("Num features: %d" % fit.n_features_)
