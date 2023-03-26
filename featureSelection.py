@@ -32,7 +32,7 @@ varray = df.values
 # ncols = len(varray[0,:])-1
 X = varray[:,13:] # All continuous variables
 Y = varray[:,8] # Win/Loss
-print(Y)
+# print(Y)
 
 # Feature selection
 model = LogisticRegression(solver='lbfgs', max_iter=1)
