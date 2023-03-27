@@ -34,11 +34,6 @@ filename = args.in_file
 # load the dataset
 df = pd.read_csv(filename)
 
-# Slice the dataframe to only look at our continuous predictor variables and also retain wl_home (our output variable) and game_yearEnd, which we will use to split our train/tesitng data.
-df_slice = df.iloc[:, 7:]
-# Drop some columns we don't need
-df_slice = df_slice.drop(['team_id_away', 'team_abbreviation_away', 'team_name_away'], axis=1)
-
 # compute the vif for all given features
 def compute_vif(considered_features):
     
@@ -77,19 +72,24 @@ considered_features.remove('TS.')
 
 # Now that all VIF values are <5, we can re-plot our correlation matrix and determine if we are satisfied that we are no longer including correlated variables
 # First, we have to create a new data frame without the three columns we removed above.
-df_slice = df_slice.drop(['ORtg', 'SimpleRatngSystem', 'MarginOfVictory', 'TS.'], axis=1)
+df= df.drop(['ORtg', 'SimpleRatngSystem', 'MarginOfVictory', 'TS.'], axis=1)
+
+# Create a new dataframe to only look at our continuous predictor variables
+df_continuous = df.iloc[:, 12:]
+# Create a new dataframe of the non-continous 
+df_extra = df[['team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd', 'wl_home']]
 
 # Now, all of our VIF values are <5, but there are still some large correlations, so we will filter out anything with a correlation value >0.5
 #Correlation with output variable
-cor = df_slice.corr()
+cor = df_continuous.corr()
 cor_target = abs(cor)
 #Selecting highly correlated features
 relevant_features = cor_target[cor_target>0.5]
 #print (relevant_features)
 
 # We can see that we have three pairwise comparisons with Pearson correlation values >0.5 (Pace-percent_2pt, X3PAr-percent_2pt, and Pace-X3PAr). We will remove X3PAr and percent_2pt and re-evaluate the correlation matrix.
-df_slice = df_slice.drop(['X3PAr', 'percent_2pt'], axis=1)
-cor = df_slice.corr()
+df_continuous = df_continuous.drop(['X3PAr', 'percent_2pt'], axis=1)
+cor = df_continuous.corr()
 cor_target = abs(cor)
 #Selecting highly correlated features
 relevant_features = cor_target[cor_target>0.5]
@@ -100,16 +100,20 @@ relevant_features = cor_target[cor_target>0.5]
 plt.figure(figsize=(18,15))
 
 # Generate a mask to onlyshow the bottom triangle
-mask = np.triu(np.ones_like(df_slice.iloc[:, 2:].corr(), dtype=bool))
+mask = np.triu(np.ones_like(df_continuous.corr(), dtype=bool))
 
 # generate heatmap
-sns.heatmap(df_slice.iloc[:, 2:].corr(), annot=True, mask=mask, vmin=-1, vmax=1)
+sns.heatmap(df_continuous.corr(), annot=True, mask=mask, vmin=-1, vmax=1)
 plt.title('Correlation Coefficient Of Predictors')
 #plt.savefig(f'collinearityPlots/predictorCorrelationMatrix_reduced.png')
 #plt.show()
 
+# Combine df_continuous and df_extra after removing pearson correlations >0.5 and VIF values >5
+df_merged_clean = pd.concat([df_continuous.reset_index(drop=True), df_extra], axis=1)
+#print (df_merged_clean.columns)
+
 # Quickly move wl_home to the last column prior to export
-df_slice = df_slice[['game_yearEnd', 'FG.', 'percent_3pt', 'percent_FT', 'DRB', 'ORB', 'TRB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PTS', 'StrengthOfSchedule', 'DRtg', 'NRtg', 'Pace', 'FTr', 'wl_home']]
+#df_slice = df_slice[['game_yearEnd', 'FG.', 'percent_3pt', 'percent_FT', 'DRB', 'ORB', 'TRB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PTS', 'StrengthOfSchedule', 'DRtg', 'NRtg', 'Pace', 'FTr', 'wl_home']]
 
 # Now that we have performed correlation-based feature selection, our new data frame is ready for downstream analyses.
-df_slice.to_csv ('merged_df_outliers_removed_CFS.csv', index = False)
+df_merged_clean.to_csv ('merged_df_outliers_removed_CFS.csv', index = False)
