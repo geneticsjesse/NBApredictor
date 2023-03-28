@@ -63,7 +63,7 @@ pyplot.show()
 for i, v in enumerate(importance):
     print ('Feature: %0d, Score: %.5f' % (i,v))
 
-print("Num features: %d" % fit.n_features_)
-print("Selected features: %s" % fit.support_)
-print("Feature Ranking: %s" % fit.ranking_)
+#print("Num features: %d" % fit.n_features_)
+#print("Selected features: %s" % fit.support_)
+#print("Feature Ranking: %s" % fit.ranking_)
 
