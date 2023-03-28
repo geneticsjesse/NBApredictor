@@ -74,6 +74,7 @@ for col in cols_to_analyze:
     # plt.title({col})
     # plt.savefig(f'outlierPlots/outliers_iqr_counts_{col}.png')
     # plt.show()
+    
     # overwrite original data frame with non-outlier data
     #reset_index() method is called on the new non-outlier data to reset its index before assigning it to the dataframe column. The drop=True argument is used to drop the old index and replace it with a new one that starts from 0. This ensures that the new data has the same length as the dataframe index and can be assigned to the column without raising a ValueError.
     df[col] = pd.Series(data_outliers_removed).reset_index(drop=True)
