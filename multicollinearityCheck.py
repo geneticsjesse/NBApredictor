@@ -16,6 +16,8 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 from statsmodels.tools.tools import add_constant
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LogisticRegression
 
 # define command line arguments
 parser = argparse.ArgumentParser(description='Variance Inflation Factor check for multicollinearity')
@@ -72,12 +74,12 @@ considered_features.remove('TS.')
 
 # Now that all VIF values are <5, we can re-plot our correlation matrix and determine if we are satisfied that we are no longer including correlated variables
 # First, we have to create a new data frame without the three columns we removed above.
-df= df.drop(['ORtg', 'SimpleRatngSystem', 'MarginOfVictory', 'TS.'], axis=1)
+df_clean= df.drop(['ORtg', 'SimpleRatngSystem', 'MarginOfVictory', 'TS.'], axis=1)
 
 # Create a new dataframe to only look at our continuous predictor variables
-df_continuous = df.iloc[:, 12:]
+df_continuous = df_clean.iloc[:, 12:]
 # Create a new dataframe of the non-continous 
-df_extra = df[['team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd', 'wl_home']]
+df_extra = df_clean[['team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd', 'wl_home']]
 
 # Now, all of our VIF values are <5, but there are still some large correlations, so we will filter out anything with a correlation value >0.5
 #Correlation with output variable
@@ -116,4 +118,25 @@ df_merged_clean = pd.concat([df_continuous.reset_index(drop=True), df_extra], ax
 #df_slice = df_slice[['game_yearEnd', 'FG.', 'percent_3pt', 'percent_FT', 'DRB', 'ORB', 'TRB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PTS', 'StrengthOfSchedule', 'DRtg', 'NRtg', 'Pace', 'FTr', 'wl_home']]
 
 # Now that we have performed correlation-based feature selection, our new data frame is ready for downstream analyses.
-df_merged_clean.to_csv ('merged_df_outliers_removed_CFS.csv', index = False)
+#df_merged_clean.to_csv ('merged_df_outliers_removed_CFS.csv', index = False)
+
+# Now that we created a new cleaned dataset using CFS, we will perform RFE on the uncleaned dataset, to see if RFE and CFS select the same top 17 features
+X=df.values[:,12:]
+Y=df.values[:,7].astype(int)
+
+# Feature selection
+model = LogisticRegression(solver='lbfgs', max_iter=1000)
+model.fit(X,Y) ####### Here we can specify X or X_scaled
+rfe = RFE(model, n_features_to_select = 17)
+fit = rfe.fit(X,Y)
+
+print("Num features: %d" % fit.n_features_)
+print("Selected features: %s" % fit.support_)
+print("Feature Ranking: %s" % fit.ranking_)
+
+cols = list(df.columns[12:])
+temp = pd.Series(rfe.support_,index = cols)
+selected_features_rfe = temp[temp==True].index
+print("Selected features from RFE are: ", selected_features_rfe)
+
+print ("Selected features from CFS are: ", df_clean.columns[12:])

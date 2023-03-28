@@ -5,7 +5,7 @@
 # How to run: python3 featureSelection.py -in merged_df_outliers_removed_CFS.csv
 # ================= #
 
-#from sklearn.feature_selection import RFE
+from sklearn.feature_selection import RFE
 from sklearn.linear_model import LogisticRegression
 from sklearn import preprocessing
 from matplotlib import pyplot
@@ -45,8 +45,8 @@ X_scaled = scaler.transform(X)
 # Feature selection
 model = LogisticRegression(solver='lbfgs', max_iter=1000)
 model.fit(X,Y) ####### Here we can specify X or X_scaled
-# rfe = RFE(model, n_features_to_select = 5)
-# fit = rfe.fit(X,Y)
+rfe = RFE(model, n_features_to_select = 17)
+fit = rfe.fit(X,Y)
 
 #Perform permutation importance
 importance = model.coef_[0]
