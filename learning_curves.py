@@ -175,5 +175,5 @@ title = r"Learning Curves " + method_name2
 plot_learning_curve(classifier2, title, X, y, axes=axes[:, 1], cv=cv, n_jobs=4)
 
 # save plots in file
-plt.savefig(f'learningCurves/learning_curves_f1score_{method1}_{method2}_CFS.png')
+plt.savefig(f'learningCurves/learning_curves_f1score_{method1}_{method2}_CFS_shuff.png')
 plt.show()
