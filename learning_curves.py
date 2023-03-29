@@ -68,10 +68,10 @@ def plot_learning_curve(estimator, title, X, y, axes=None, ylim=None, cv=None,
     if ylim is not None:
         axes[0].set_ylim(*ylim)
     axes[0].set_xlabel("Training examples")
-    axes[0].set_ylabel("Score")
+    axes[0].set_ylabel("F1 Score")
 
     train_sizes, train_scores, test_scores, fit_times, _ = \
-        learning_curve(estimator, X, y, cv=cv, n_jobs=n_jobs,
+        learning_curve(estimator, X, y, scoring = scoring, cv=cv, n_jobs=n_jobs,
                        train_sizes=train_sizes,
                        return_times=True)
     train_scores_mean = np.mean(train_scores, axis=1)
@@ -144,11 +144,12 @@ classifier2, method_name2 = set_classifier(method2)
 
 # load the dataset; header is first row
 df = pd.read_csv(filename, header=0)
-
+# remove non-integer columns to plot
+df_slice = df.drop(['game_date', 'team_abbreviation_home', 'team_abbreviation_away'], axis=1)
 # separate input and output variables
-varray  = df.values
+varray  = df_slice.values
 nc      = len(varray[0,:])-1
-X       = varray[:,1:nc]
+X       = varray[:,1:18]
 y       = varray[:,nc]
 
 fig, axes = plt.subplots(3, 2, figsize=(10, 15))
@@ -159,6 +160,7 @@ fig, axes = plt.subplots(3, 2, figsize=(10, 15))
 # Cross validation with 100 iterations to get smoother mean test and train
 # score curves, each time with 20% data randomly selected as a validation set.
 cv = ShuffleSplit(n_splits=num_splits, test_size=0.2, random_state=0)
+scoring = 'f1'
 title = r"Learning Curves " + method_name1
 plot_learning_curve(classifier1, title, X, y, axes=axes[:, 0], cv=cv, n_jobs=4)
 
@@ -173,5 +175,5 @@ title = r"Learning Curves " + method_name2
 plot_learning_curve(classifier2, title, X, y, axes=axes[:, 1], cv=cv, n_jobs=4)
 
 # save plots in file
-plt.savefig(f'learningCurves/learning_curves_{method1}_{method2}.png')
+plt.savefig(f'learningCurves/learning_curves_f1score_{method1}_{method2}_CFS.png')
 plt.show()

@@ -37,7 +37,8 @@ DONT USE ACCURACY USE F1 SCORE and use MCC as well
 
 provide a picture/flowchart of the pipeline
 
-
+#################################DONE #########################################
 for correlation check --> can you try to run RFE on the original dataset without being cleaned by correlation based approaches  and choose target features to select to 17
 --- big danger of feature by feature eleimination -> sometimes you arent looking at correlation with outcomes
 --> RFE with logistic regression 17 features and see if we select the SAME 17 features as what we found from CFS --> possibly run in parallel and compare multivariate (RFE) vs univriate (CFS) and see what the results look like 
+#################################DONE #########################################
