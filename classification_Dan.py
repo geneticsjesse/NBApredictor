@@ -10,14 +10,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import ShuffleSplit, RepeatedKFold, cross_val_score, cross_val_predict
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier
-from sklearn.linear_model import LogisticRegression, RidgeClassifier, SGDClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
-from sklearn.svm import SVC, LinearSVC
-from sklearn import linear_model
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import matthews_corrcoef
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn import tree
+from sklearn.svm import SVC
 from sklearn import model_selection
 import argparse
 import sys
@@ -26,16 +25,11 @@ import pandas as pd
 
 
 method_name = {
-    "adaboost": "AdaBoost Classification",
-    "ridgec": "Ridge Classification",
-    "dtc": "Decision Tree Classification",
-    "gbc": "Gradient Boosting Classification",
     "knn": "K-Nearest Neighbour Classification",
     "linear": "Linear Classification",
-    "linsvc": "Linear Support Vector Classification",
+    "gnb": "Gaussian Naive Bayes",
     "mlp": "Multi-Layer Perceptron Classification",
     "rf": "Random Forest Classification",
-    "sgd": "Stochastic Gradient Descent Classification",
     "svc": "Support Vector Classification"
 }
 
@@ -49,26 +43,12 @@ scoring = { 'Accuracy':'accuracy',
 # Set classifier model
 # Return: regressor and method name (for printing purposes)
 def set_classifier(method):
-    if (method == "adaboost"):
-        classifier = AdaBoostClassifier(random_state=0, n_estimators=100)
 
-    elif (method == "ridgec"):
-        classifier = RidgeClassifier()
-
-    elif (method == "dtc"):
-        classifier = tree.DecisionTreeClassifier()
-
-    elif (method == "gbc"):
-        classifier = GradientBoostingClassifier(n_estimators=100)
-
-    elif (method == "knn"):
+    if (method == "knn"):
         classifier = KNeighborsClassifier(n_neighbors=5)
 
     elif (method == "linear"):
-        classifier = LogisticRegression(max_iter=100000)
-
-    elif (method == "linsvc"):
-        classifier = LinearSVC(random_state=0, tol=1e-05, max_iter=100000)
+        classifier = LogisticRegression(solver = 'lbfgs', max_iter=100000)
 
     # sometimes throws warnings for labels/classes with no predicted samples
     elif (method == "mlp"):
@@ -77,8 +57,8 @@ def set_classifier(method):
     elif (method == "rf"):
         classifier = RandomForestClassifier(n_estimators=100, random_state=0)
 
-    elif (method == "sgd"):
-        classifier = SGDClassifier(max_iter=100000, tol=1e-3)
+    elif (method == "gnb"):
+        classifier = GaussianNB()
 
     elif (method == "svc"):
         classifier = SVC(C=1.0, gamma='auto')
@@ -102,15 +82,21 @@ def eval_model(classifier, num_sp, num_rep):
     print("Num splits".ljust(num_characters),":", num_splits)
 
     for name,score in scoring.items():
-        results = model_selection.cross_val_score(classifier, X, y, cv=kfold, scoring=score, n_jobs=-1)
+        results = model_selection.cross_val_score(classifier, X, Y, cv=kfold, scoring=score, n_jobs=-1)
         print(name.ljust(num_characters), ": %.3f (%.3f)" % (np.absolute(results.mean()), np.absolute(results.std())))
-
+    #Y_pred = cross_val_predict (classifier, X, Y, cv=kfold)
+    # Evaluate model
+    #scores = matthews_corrcoef (Y, Y_pred)
+    #return (scores)
+    #print (f"The Matthews Correlation Coefficient from was: ", scores)
 # Plot predicted values against true values
 def plot_predictions(classifier, num_sp):
-    predicted = cross_val_predict(classifier, X, y, cv=num_sp, n_jobs=-1)
+    predicted = cross_val_predict(classifier, X, Y, cv=num_sp, n_jobs=-1)
+    scores = matthews_corrcoef (Y, predicted)
+    print (f"The Matthews Correlation Coefficient from was: ", scores)
     fig, ax = plt.subplots()
-    ax.scatter(y, predicted, edgecolors=(0, 0, 0))
-    ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
+    ax.scatter(Y, predicted, edgecolors=(0, 0, 0))
+    ax.plot([Y.min(), Y.max()], [Y.min(), Y.max()], 'k--', lw=4)
     ax.set_xlabel('Measured')
     ax.set_ylabel('Predicted')
     plt.show()
@@ -124,11 +110,14 @@ def read_data():
     df = pd.read_csv(filename, header=0)
 
     # separate input and output variables
-    varray  = df.values
+    # remove non-integer columns to plot
+    df_slice = df.drop(['game_date', 'team_abbreviation_home', 'team_abbreviation_away'], axis=1)
+# separate input and output variables
+    varray  = df_slice.values
     nc      = len(varray[0,:])-1
-    X       = varray[:,0:nc]
-    y       = varray[:,nc]
-    return X, y
+    X       = varray[:,1:18]
+    Y       = varray[:,nc]
+    return X, Y
 
 # ----------------------------------------------------------
 # MAIN PROGRAM
@@ -157,7 +146,7 @@ num_splits  = int(args.num_splits)
 classifier, method_name = set_classifier(method)
 
 # load data from file
-X, y = read_data()
+X, Y = read_data()
 
 # evaluate model
 eval_model(classifier, kf, num_splits)
