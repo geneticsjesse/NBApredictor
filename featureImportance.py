@@ -52,7 +52,7 @@ for df in df_list:
     model = LogisticRegression(solver='lbfgs', max_iter=1000)
     model.fit(X,Y) ####### Here we can specify X or X_scaled
     # rfe = RFE(model, n_features_to_select = 5)
-    # fit = rfe.fit(X,Y)
+    # fit = rfe.fit(X,Y)d
 
     #Perform permutation importance
     importance = model.coef_[0]
