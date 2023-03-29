@@ -52,7 +52,7 @@ for df, ax in zip(df_list, axs.ravel()):
     scaler = preprocessing.StandardScaler().fit(X)
     X_scaled = scaler.transform(X)
 
-    # Feature selection
+    # Feature selectionn
     model = LogisticRegression(solver='lbfgs', max_iter=1000)
     model.fit(X_scaled,Y) ####### Here we can specify X or X_scaled
     rfe = RFE(model, n_features_to_select = 5)
@@ -83,7 +83,7 @@ for df, ax in zip(df_list, axs.ravel()):
     # pyplot.ylabel('Importance')
     # pyplot.xticks(range(0,17), rotation = 'vertical')
 
-pyplot.savefig(f"featureImportance/feature_Importance.png")
+pyplot.savefig(f"featureImportance/feature_Importance_CFS_RFE.png")
 pyplot.show()
 
 
