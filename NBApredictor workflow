@@ -32,7 +32,7 @@ can have a table showing stacking results in the report
 use Jihao's paper as a basis for what to report (figures, tables, workflows, etc)
 combine the ranking/model evaluation paramters into a single ranked table (we will we)
 
-
+####### F1 score plotted - MCC tables required
 DONT USE ACCURACY USE F1 SCORE and use MCC as well 
 
 provide a picture/flowchart of the pipeline

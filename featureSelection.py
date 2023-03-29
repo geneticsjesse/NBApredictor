@@ -44,26 +44,27 @@ X_scaled = scaler.transform(X)
 
 # Feature selection
 model = LogisticRegression(solver='lbfgs', max_iter=1000)
-model.fit(X,Y) ####### Here we can specify X or X_scaled
+model.fit(X_scaled,Y) ####### Here we can specify X or X_scaled
 rfe = RFE(model, n_features_to_select = 17)
 fit = rfe.fit(X,Y)
 
-#Perform permutation importance
-importance = model.coef_[0]
-x_axis = [x for x in range(len(importance))]
+# Create a data frame of importance and column names
+importances = pd.DataFrame(data={
+    'Attribute': df.columns[0:17],
+    'Importance': model.coef_[0]
+})
+# Sort in descending order
+importances = importances.sort_values(by='Importance', ascending=False)
 
-pyplot.figure(figsize=(10,7))
-pyplot.bar(x_axis, importance)
-pyplot.xlabel('Features')
+# Plot
+pyplot.figure(figsize=(8,6))
+pyplot.bar(x=importances['Attribute'], height=importances['Importance'], color='#087E8B')
+#pyplot.xlabel('Features')
 pyplot.ylabel('Importance')
-pyplot.xticks(range(0,17))
-#pyplot.savefig(f'featureImportance/feature_Importance.png')
+pyplot.xticks(range(0,17), rotation = 'vertical')
+pyplot.title ('Feature Importance - CFS - X scaled', size = 20)
+pyplot.savefig(f'featureImportance/feature_Importance_CFS_xScaled.png')
 pyplot.show()
 
-for i, v in enumerate(importance):
-    print ('Feature: %0d, Score: %.5f' % (i,v))
-
-#print("Num features: %d" % fit.n_features_)
-#print("Selected features: %s" % fit.support_)
-#print("Feature Ranking: %s" % fit.ranking_)
-
+# for i, v in enumerate(importances):
+#     print ('Feature: %0d, Score: %.5f' % (i,v))
