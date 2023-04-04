@@ -11,6 +11,8 @@
 import pandas as pd
 import argparse
 import sys
+import matplotlib.pyplot as plt 
+#from matplotlib import pyplot
 
 # define command line arguments
 parser = argparse.ArgumentParser(description='Data cleaning')
@@ -47,14 +49,31 @@ teamdat_cleaned = teamdat[['Team', 'FG.', 'X3P.', 'X2P.', 'FT.', 'DRB', 'ORB', '
 # Left merging dataframes to create a master data frame
 merged_df = pd.merge(gamedat_cleaned, teamdat_cleaned, on=['game_yearEnd', 'Team'], how='left')
 
+# Pie chart of wl_home
+wl_home_count_list = merged_df["wl_home"].value_counts().tolist()
+wl_home_list = merged_df["wl_home"].value_counts().keys().tolist()
+
+sliceColors = ['#00AFBB', "#E7B800"]
+plt.pie(wl_home_count_list, 
+        labels = wl_home_list, 
+        colors = sliceColors, 
+        startangle=90,
+        autopct='%.2f%%', 
+        wedgeprops = {"edgecolor" : "black",
+                      'linewidth': 1,
+                      'antialiased': True})
+plt.title("Win/Loss Home Distribution")
+plt.savefig(f"wl_home_piechart.png")
+plt.show()
+
 # Converting wl_home column to be binary (0,1) for Loss/Win respectively
 merged_df['wl_home'] = merged_df['wl_home'].map({'W': 1, 'L': 0})
 
 # Adding new column that represents home/away status
-merged_df['status'] = 1
+#merged_df['status'] = 1
 
 # Writing to csv
-merged_df.to_csv('merged_df_home.csv', index=False)
+#merged_df.to_csv('merged_df.csv', index=False)
 
 # Data pre-processing (missing values)
 

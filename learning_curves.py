@@ -35,7 +35,7 @@ def set_classifier(method):
 }
 
     if (method == "knn"):
-        classifier = KNeighborsClassifier(n_neighbors=5)
+        classifier = KNeighborsClassifier(n_neighbors=11, leaf_size=30, metric = 'minkowski')
 
     elif (method == "linear"):
         classifier = LogisticRegression(max_iter=100000)
@@ -44,7 +44,7 @@ def set_classifier(method):
         classifier = SVC(C=1.0, gamma='auto')
 
     elif (method == "rf"):
-        classifier = RandomForestClassifier(n_estimators=100, random_state=0)
+        classifier = RandomForestClassifier(n_estimators=100, max_features=5, random_state=0)
 
     elif (method == "gnb"):
         classifier = GaussianNB()

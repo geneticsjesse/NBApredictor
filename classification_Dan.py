@@ -1,10 +1,10 @@
 # ===================== #
 # Classification models #
 # ===================== #
-# Author:   Dan Tulpan, dtulpan@uoguelph.ca
-# Date:     March 16, 2021
+# Author:    Jesse Wolf, jwolf@uoguelph.ca | Thomas Papp-Simon, tpappsim@uoguelph.ca
+# Date:     April 4 2023
 
-# How to run:   python3  classification.py  -in iris_num.csv  -m linear  -k 10  -n 3
+# How to run:   python3  classification.py  -in merged_df_outliers_removed_CFS.csv -m linear  -k 10  -n 3
 # ================= #
 
 import numpy as np

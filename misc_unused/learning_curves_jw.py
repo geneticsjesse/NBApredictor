@@ -6,14 +6,16 @@
 # Author:   Jesse Wolf, jwolf@uoguelph.ca | Thomas Papp-Simon, tpappsim@uoguelph.ca
 # Date:     March 26, 2023
 #
-# How to run:   python3 learning_curves.py -in merged_df_outliers_removed_CFS.csv  -m1 knn  -m2 linear -n 10
+# How to run:   python3 learning_curves.py -in merged_df_outliers_removed_CFS.csv
 # ========================================================================= #
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.model_selection import LearningCurveDisplay, ShuffleSplit
+from sklearn.model_selection import LearningCurveDisplay, ShuffleSplit, cross_val_predict
+from sklearn.metrics import matthews_corrcoef
 from sklearn.naive_bayes import GaussianNB
 import pandas as pd
 from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 
@@ -30,8 +32,8 @@ y       = varray[:,nc]
 svc= SVC(C=1.0, gamma='auto')
 gnb =  GaussianNB()
 #knn = KNeighborsClassifier(n_neighbors=5)
-# linear = LogisticRegression(max_iter=100000)
-# rf= RandomForestClassifier(n_estimators=100, random_state=0)
+linear = LogisticRegression(max_iter=100000)
+#rf= RandomForestClassifier(n_estimators=100, random_state=0)
 ann =  MLPClassifier(hidden_layer_sizes=(8,8,8), activation='relu', solver='adam', max_iter=500)
 
 
@@ -46,13 +48,14 @@ common_params = {
     "n_jobs": 4,
     "line_kw": {"marker": "o"},
     "std_display_style": "fill_between",
-    "score_name": "Accuracy",
+    "score_name": "Matthews Correlation Coefficient",
 }
-
 for ax_idx, estimator in enumerate([gnb, ann]):
-    LearningCurveDisplay.from_estimator(estimator, **common_params, ax=ax[ax_idx])
+    predicted = cross_val_predict(estimator, X, y, cv=10, n_jobs=-1)
+    scores = matthews_corrcoef (y, predicted)
+    LearningCurveDisplay.from_estimator(estimator, **common_params, ax=ax[ax_idx], scoring='matthews_corrcoef')
     handles, label = ax[ax_idx].get_legend_handles_labels()
     ax[ax_idx].legend(handles[:2], ["Training Score", "Test Score"])
     ax[ax_idx].set_title(f"Learning Curve for {estimator.__class__.__name__}")
-plt.savefig(f'learningCurves/learning_curves_accuracy_gnb_ann_CFS_JWscript.png')    
+#plt.savefig(f'learningCurves/learning_curves_accuracy_gnb_ann_CFS_JWscript.png')    
 plt.show()
