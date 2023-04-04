@@ -12,6 +12,7 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.metrics import mean_squared_error
 import numpy as np
 import statsmodels.api as sm
+from statsmodels.tsa.arima.model import ARIMA
 import pandas as pd
 import argparse
 import sys
@@ -39,7 +40,7 @@ rmse = []
 for train_index, test_index in tscv.split(df_CFS):
     cv_train, cv_test = df_CFS.iloc[train_index], df_CFS.iloc[test_index]
     
-    arma = sm.tsa.ARMA(cv_train, (2,2)).fit(disp=False)
+    arma = sm.tsa.ARIMA(cv_train, (2,2)).fit(disp=False)
     
     predictions = arma.predict(cv_test.index.values[0], cv_test.index.values[-1])
     true_values = cv_test.values

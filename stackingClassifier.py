@@ -1,14 +1,17 @@
 # ===================== #
 # Classification models #
 # ===================== #
-# Author:   Dan Tulpan, dtulpan@uoguelph.ca
-# Date:     March 16, 2021
+
+# Source: https://machinelearningmastery.com/stacking-ensemble-machine-learning-with-python/
+# Author:   Jesse Wolf, jwolf@uoguelph.ca | Thomas Papp-Simon, tpappsim@uoguelph.ca
+# Date:     April 4 2023
 
 # How to run:   python3  stackingClassifier.py  -in merged_df_outliers_removed_CFS.csv -m linear  -k 10  -n 3
 # ================= #
 import argparse
 import sys
 import os
+from sklearn import preprocessing
 import matplotlib.pyplot as plt 
 from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score, cross_val_predict
 from sklearn.ensemble import RandomForestClassifier
@@ -87,19 +90,20 @@ def get_models():
 # evaluate a given model using cross-validation
 def evaluate_model(model, X, y):
  cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
- #Y_pred = cross_val_predict (model, X, y, cv = cv)
- #scores = matthews_corrcoef (y, Y_pred)
- scores = cross_val_score(model, X, y, scoring='f1', cv=cv, n_jobs=-1, error_score='raise')
+ scores = cross_val_score(model, X, y, scoring='matthews_corrcoef', cv=cv, n_jobs=-1, error_score='raise')
  return scores
 
 # define dataset
 X, y = read_data()
+# Scale the data to facilitate feature selection
+scaler = preprocessing.StandardScaler().fit(X)
+X_scaled = scaler.transform(X)
 # get the models to evaluate
 models = get_models()
 # evaluate the models and store results
 results, names = list(), list()
 for name, model in models.items():
- scores = evaluate_model(model, X, y)
+ scores = evaluate_model(model, X_scaled, y)
  results.append(scores)
  names.append(name)
  print('>%s %.3f (%.3f)' % (name, mean(scores), std(scores)))
