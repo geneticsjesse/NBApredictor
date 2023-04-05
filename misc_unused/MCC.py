@@ -51,13 +51,13 @@ X_scaled = scaler.transform(X)
 
 # Split data into test and train two ways
 # Using train_test_split
-X_train, X_test, Y_train, Y_test = train_test_split(X_scaled, Y, test_size=0.2, random_state=13)
+# X_train, X_test, Y_train, Y_test = train_test_split(X_scaled, Y, test_size=0.2, random_state=13)
 
-# Manually training on seasons 2015-2021 and testing on 2022
-X_train_forward = scaler.transform(df[(df['game_yearEnd'] >= 2015) & (df['game_yearEnd'] <= 2021)].iloc[:, 0:17])
-X_test_forward = scaler.transform(df[(df['game_yearEnd']== 2022)].iloc[:, 0:17])
-Y_train_forward = df[(df['game_yearEnd'] >= 2015) & (df['game_yearEnd'] <= 2021)].iloc[:, -1]
-Y_test_forward = df[(df['game_yearEnd']== 2022)].iloc[:, -1]
+# # Manually training on seasons 2015-2021 and testing on 2022
+# X_train_forward = scaler.transform(df[(df['game_yearEnd'] >= 2015) & (df['game_yearEnd'] <= 2021)].iloc[:, 0:17])
+# X_test_forward = scaler.transform(df[(df['game_yearEnd']== 2022)].iloc[:, 0:17])
+# Y_train_forward = df[(df['game_yearEnd'] >= 2015) & (df['game_yearEnd'] <= 2021)].iloc[:, -1]
+# Y_test_forward = df[(df['game_yearEnd']== 2022)].iloc[:, -1]
 
 # Create function to evaluate MCC of a given model
 def evaluate_model (X, Y, model):
@@ -66,7 +66,7 @@ def evaluate_model (X, Y, model):
     # Define train test split
     #X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=13)
     # Fit model
-    model.fit (X, Y)
+    #model.fit (X, Y)
     # Create predictions
     Y_pred = cross_val_predict (model, X, Y, cv=cvKF)
     # Evaluate model
