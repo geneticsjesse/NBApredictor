@@ -32,26 +32,27 @@ except:
 
 # save arguments in separate variables
 filename    = args.in_file
+# load the dataset
+df = pd.read_csv(filename)
+# Slice off non-numeric columns
+#df_slice = df.drop(['game_date', 'team_abbreviation_home', 'team_abbreviation_away'], axis=1)
+# Set our x and y variables
+X=df.values[:,0:17]
+df_extra = df[['team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd']]
+Y=df.values[:,-1].astype(int)
 
-def read_data():
-    # load the dataset; header is first row
-    df = pd.read_csv(filename, header=0)
-
-    # separate input and output variables
-    # remove non-integer columns to plot
-    df_slice = df.drop(['game_date', 'team_abbreviation_home', 'team_abbreviation_away'], axis=1)
-# separate input and output variables
-    varray  = df_slice.values
-    nc      = len(varray[0,:])-1
-    X       = varray[:,1:18]
-    Y       = varray[:,nc]
-    return X, Y
-
-X,y = read_data()
-
-# Scale the data to facilitate feature selection
+# Scale the data
 scaler = preprocessing.StandardScaler().fit(X)
 X_scaled = scaler.transform(X)
 
-#print (X)
-print (X_scaled.columns)
+# Create a new DataFrame with the scaled values and the original column names
+scaled_df = pd.DataFrame(X_scaled)
+# Concatenate our scaled_df with df_extra, which has our extra (categorical) data
+scaled_df = pd.concat([scaled_df.reset_index(drop=True), df_extra], axis=1)
+
+# Add the target column to the new DataFrame
+scaled_df['wl_home'] = Y
+
+print (scaled_df)
+
+scaled_df.to_csv ('merged_df_outliers_removed_RFE_Xscaled.csv', index = False)

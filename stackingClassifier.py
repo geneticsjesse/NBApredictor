@@ -6,7 +6,7 @@
 # Author:   Jesse Wolf, jwolf@uoguelph.ca | Thomas Papp-Simon, tpappsim@uoguelph.ca
 # Date:     April 4 2023
 
-# How to run:   python3  stackingClassifier.py  -in merged_df_outliers_removed_CFS.csv -m linear  -k 10  -n 3
+# How to run:   python3  stackingClassifier.py  -in merged_df_outliers_removed_CFS_Xscaled.csv
 # ================= #
 import argparse
 import sys
