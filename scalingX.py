@@ -38,6 +38,9 @@ df = pd.read_csv(filename)
 #df_slice = df.drop(['game_date', 'team_abbreviation_home', 'team_abbreviation_away'], axis=1)
 # Set our x and y variables
 X=df.values[:,0:17]
+# Create a list of column names to add to our new scaled dataframe
+X_colnames= df.columns[0:17]
+# Create a data frame with our non-numerical data
 df_extra = df[['team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd']]
 Y=df.values[:,-1].astype(int)
 
@@ -46,7 +49,7 @@ scaler = preprocessing.StandardScaler().fit(X)
 X_scaled = scaler.transform(X)
 
 # Create a new DataFrame with the scaled values and the original column names
-scaled_df = pd.DataFrame(X_scaled)
+scaled_df = pd.DataFrame(X_scaled, columns=X_colnames)
 # Concatenate our scaled_df with df_extra, which has our extra (categorical) data
 scaled_df = pd.concat([scaled_df.reset_index(drop=True), df_extra], axis=1)
 
@@ -55,4 +58,4 @@ scaled_df['wl_home'] = Y
 
 print (scaled_df)
 
-scaled_df.to_csv ('merged_df_outliers_removed_RFE_Xscaled.csv', index = False)
+#scaled_df.to_csv ('merged_df_outliers_removed_RFE_Xscaled.csv', index = False)

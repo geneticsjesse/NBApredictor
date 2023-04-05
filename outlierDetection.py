@@ -15,30 +15,30 @@ import argparse
 import sys
 from pandas.api.types import is_numeric_dtype
 
-# define command line arguments
-parser = argparse.ArgumentParser(description='Outlier Detection')
-parser.add_argument('--in_file', '-in', action="store", dest='in_file', required=True, help='Name of csv input file.')
+# # define command line arguments
+# parser = argparse.ArgumentParser(description='Outlier Detection')
+# parser.add_argument('--in_file', '-in', action="store", dest='in_file', required=True, help='Name of csv input file.')
 
-# handle user errors
-try:
-    args = parser.parse_args()
-except:
-    parser.print_help()
-    sys.exit(0)
+# # handle user errors
+# try:
+#     args = parser.parse_args()
+# except:
+#     parser.print_help()
+#     sys.exit(0)
 
-# save arguments in separate variables
-filename = args.in_file
+# # save arguments in separate variables
+# filename = args.in_file
 
-# load the dataset
-df = pd.read_csv(filename)
+# # load the dataset
+# df = pd.read_csv(filename)
 
 # select the columns to analyze
-cols_to_analyze = df.columns[12:]
+cols_to_analyze = merged_df.columns[12:]
 
 # loop through the selected columns
 for col in cols_to_analyze:
     print(f"Column {col}:")
-    data = df[col].values
+    data = merged_df[col].values
 
     # calculate the inter-quartile range
     q25, q75 = np.percentile(data, 25), np.percentile(data, 75)
@@ -77,18 +77,12 @@ for col in cols_to_analyze:
     
     # overwrite original data frame with non-outlier data
     #reset_index() method is called on the new non-outlier data to reset its index before assigning it to the dataframe column. The drop=True argument is used to drop the old index and replace it with a new one that starts from 0. This ensures that the new data has the same length as the dataframe index and can be assigned to the column without raising a ValueError.
-    df[col] = pd.Series(data_outliers_removed).reset_index(drop=True)
+    merged_df[col] = pd.Series(data_outliers_removed).reset_index(drop=True)
 
 # Create a for loop to iterate over all columns in the the dataframe and replace NAs with mean values.
-for col in df.columns:
-    if (is_numeric_dtype(df[col])):
-        df[col] = df[col].replace(np.NaN,df[col].mean())
-
-# Interpolate missing data to avoid NAs - this is one option to deal with NAs, we can also impute with mean, or drop NA's
-#df_filtered = df.interpolate(method = "linear", limit_direction="both", axis = 0)
-
-# Drop NAs
-# df.dropna(inplace=True)
+for col in merged_df.columns:
+    if (is_numeric_dtype(merged_df[col])):
+        merged_df[col] = merged_df[col].replace(np.NaN,merged_df[col].mean())
 
 # Write to new file
-df.to_csv ('merged_df_outliers_removed.csv', index = False)
+merged_df.to_csv ('masterScript_testRun/merged_df_outliers_removed.csv', index = False)

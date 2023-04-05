@@ -1,5 +1,5 @@
 # ===================== #
-# Clean data prior to outlier analysis #
+# Clean data prior to downstream analyses #
 # ===================== #
 # Author:   Jesse Wolf, jwolf@uoguelph.ca | Thomas Papp-Simon, tpappsim@uoguelph.ca
 # Date:     March 15, 2023
@@ -12,7 +12,6 @@ import pandas as pd
 import argparse
 import sys
 import matplotlib.pyplot as plt 
-#from matplotlib import pyplot
 
 # define command line arguments
 parser = argparse.ArgumentParser(description='Data cleaning')
@@ -33,9 +32,6 @@ team_filename = args.teamData_in_file
 # load the dataset
 gamedat = pd.read_csv(game_filename)
 teamdat = pd.read_csv (team_filename)
-
-#gamedat = pd.read_csv(r"C:\Users\Admin\Documents\MBINF\ANSC6100\NBApredictor-1\gamedata.csv")
-#teamdat = pd.read_csv(r"C:\Users\Admin\Documents\MBINF\ANSC6100\NBApredictor-1\combinedTeamData.csv")
 
 # Renaming values containing 'LA Clippers' to 'Los Angeles Clippers' for consistency
 gamedat['team_name_home'] = gamedat['team_name_home'].replace(to_replace="LA Clippers", value="Los Angeles Clippers")
@@ -63,19 +59,16 @@ plt.pie(wl_home_count_list,
                       'linewidth': 1,
                       'antialiased': True})
 plt.title("Win/Loss Home Distribution")
-plt.savefig(f"wl_home_piechart.png")
+#plt.savefig(f"wl_home_piechart.png")
 plt.show()
+
+# The pie chart produced above shows us the home team wins ~57% of the time, meaning we will need to stratify our data when performing cross validation, to avoid an imbalanced training/testing split.
 
 # Converting wl_home column to be binary (0,1) for Loss/Win respectively
 merged_df['wl_home'] = merged_df['wl_home'].map({'W': 1, 'L': 0})
 
-# Adding new column that represents home/away status
-#merged_df['status'] = 1
+# Using the .isnull() method to find if there are any missing values in the merged dataset.
+print("There are", merged_df.isnull().sum().sum(), "missing values in the merged dataset.") 
 
 # Writing to csv
 #merged_df.to_csv('merged_df.csv', index=False)
-
-# Data pre-processing (missing values)
-
-# Using the .isnull() method to find if there are any missing values in the merged dataset.
-print(merged_df.isnull().sum().sum()) 
