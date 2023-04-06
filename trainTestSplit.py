@@ -19,7 +19,7 @@ import sys
 
 # define command line arguments
 parser = argparse.ArgumentParser(description='Data cleaning')
-parser.add_argument('--CFS_file', '-cfs', action="store", dest='cfs_file', required=True, help='Name of csv input file.')
+parser.add_argument('--input_file', '-in', action="store", dest='in_file', required=True, help='Name of csv input file.')
 
 # handle user errors
 try:
@@ -29,38 +29,74 @@ except:
     sys.exit(0)
 
 # save arguments in separate variables
-cfs_filename = args.cfs_file
+in_filename = args.in_file
 
 # load the dataset
-df_CFS = pd.read_csv(cfs_filename)
+df = pd.read_csv(in_filename)
 
-x = 0
+# x = 0
 # print(df_CFS['game_yearEnd'].value_counts(2022))
 # print(df_CFS.groupby('game_yearEnd').count(2022))
-count_2022 = len(df_CFS[df_CFS['game_yearEnd'] == 2022])
-print(str(count_2022)) # should be 1230 records for 2022.
+# count_2022 = len(df_CFS[df_CFS['game_yearEnd'] == 2022])
+# print("Training test size corresponding to number of matches played in 2022:", str(count_2022)) # should be 1230 records for 2022.
 
 # Checking variance of each column
-for col in df_CFS.columns:
-    if df_CFS[col].dtype == 'object':
-        df_CFS[col] = df_CFS[col].astype(int)
-    # if df_CFS[col].var() < 1:
-    #     df_CFS = df_CFS.drop(col, axis=1)
-    print(df_CFS[col].var())
+# for col in df_CFS.columns:
+#     if df_CFS[col].dtype == 'object':
+#         df_CFS[col] = df_CFS[col].astype(int)
+#     # if df_CFS[col].var() < 1:
+#     #     df_CFS = df_CFS.drop(col, axis=1)
+#     print(df_CFS[col].var())
 
-# tscv = TimeSeriesSplit(n_splits = 4, test_size=count_2022) # make the max test size 1230
-# rmse = []
-# for train_index, test_index in tscv.split(df_CFS):
-#     cv_train, cv_test = df_CFS.iloc[train_index], df_CFS.iloc[test_index]
+
+
+### Function for time-series training-testing split, to ensure training is done on past season data to predict future seasons. 
+# Takes in a dataframe, a specific model, and predictors. The start argument is set to 2, which means that we require at least 2 seasons in our training set to start making predictions (can be overwritten). The step argument refers to 
+def backtest(df, model, predictors, start = 2, step = 1):
+    # List of dataframes where each df contains the predictions for a single season
+    all_predictions = []
+
+    # Initialize a list of all seasons in our dataset
+    seasons = sorted(df["game_yearEnd"].unique())
+
+    # Loop through seasons, where we specify the requirement for at least 2 seasons to make predictions, up to the length of our 'seasons' list. The step parameter defines how we progress through the seasons we want to predict (so if step = 2, it will make predictions for 2 seasons at a time).
+    for i in range(start, len(seasons), step):
+        # First time going through loop -> i = 2 -> takes the 3rd element from the 'seasons' list, and will make predictions for that season. It will use data from all seasons prior to this one for the training data. Each time it goes through the loop, goes to next season (if step = 1).
+        season = seasons[i] 
+
+        train = df[df["game_yearEnd"] < season] # All data that comes before current season
+        test = df[df["game_yearEnd"] == 2022] # Data used to generate predictions (current season)
+        print(train, test)
+
+seasons = sorted(df["game_yearEnd"].unique())
+train_set_list = []
+    # Loop through seasons, where we specify the requirement for at least 2 seasons to make predictions, up to the length of our 'seasons' list. The step parameter defines how we progress through the seasons we want to predict (so if step = 2, it will make predictions for 2 seasons at a time).
+for i in range(2, len(seasons), 1):
+        # First time going through loop -> i = 2 -> takes the 3rd element from the 'seasons' list, and will make predictions for that season. It will use data from all seasons prior to this one for the training data. Each time it goes through the loop, goes to next season (if step = 1).
+    season = seasons[i] 
+
+    train = df[df["game_yearEnd"] < season] # All data that comes before current season
+    test = df[df["game_yearEnd"] == 2022] # Data used to generate predictions (current season)
+    train_set_list.append(train) # List of training set dataframes
     
-#     arma = sm.tsa.ARIMA(cv_train, (2,2)).fit(disp=False)
-    arma = sm.tsa.ARIMA(cv_train, (2,2)).fit(disp=False)
+
+    # Write each training split to csv file
+    for list in train_set_list:
+        #print(list)
+        list.to_csv(f"training2015-{season-1}.csv", index=False)
     
-#     predictions = arma.predict(cv_test.index.values[0], cv_test.index.values[-1])
-#     true_values = cv_test.values
-#     rmse.append(np.sqrt(mean_squared_error(true_values, predictions)))
-    
-# print("RMSE: {}".format(np.mean(rmse)))
+test.to_csv(f"testing2022.csv", index=False)
+
+
+    #print(split_list)
+        # model.fit(train[predictors], train["wl_home"])
+
+        # preds = model.predict(test[predictors])
+        # preds = pd.Series(preds, index=test.index) # Convert numpy array to pandas series
+
+        # combined = pd.concat([test["wl_home"], preds], axis=1)
+        # combined.columns = ["actual", "prediction"]
+    # return pd.concat(all_predictions)
 
 
 
