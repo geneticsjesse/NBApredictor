@@ -61,7 +61,7 @@ def backtest(df, model, predictors, start = 2, step = 1):
 
     # Loop through seasons, where we specify the requirement for at least 2 seasons to make predictions, up to the length of our 'seasons' list. The step parameter defines how we progress through the seasons we want to predict (so if step = 2, it will make predictions for 2 seasons at a time).
     for i in range(start, len(seasons), step):
-        # First time going through loop -> i = 2 -> takes the 3rd element from the 'seasons' list, and will make predictions for that season. It will use data from all seasons prior to this one for the training data. Each time it goes through the loop, goes to next season (if step = 1).
+        # First time going through loop -> i = 2 -> takes the 3rd element from the 'seasons' list, and will make predictions for that season. It will use data from all seasons prior to this one for the training data. Each time it goes through the loop, goes to next season (if step = 1).s
         season = seasons[i] 
 
         train = df[df["game_yearEnd"] < season] # All data that comes before current season

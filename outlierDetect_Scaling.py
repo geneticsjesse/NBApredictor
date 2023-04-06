@@ -7,7 +7,7 @@
 # How to run:   python3  outlierDetection.py  -in df.csv
 # ================= #
 
-# Import relevant libraries
+# Import relevant librariess
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
