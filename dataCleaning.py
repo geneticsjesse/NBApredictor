@@ -45,6 +45,33 @@ teamdat_cleaned = teamdat[['Team', 'FG.', 'X3P.', 'X2P.', 'FT.', 'DRB', 'ORB', '
 # Left merging dataframes to create a master data frame
 merged_df = pd.merge(gamedat_cleaned, teamdat_cleaned, on=['game_yearEnd', 'Team'], how='left')
 
+# summarize data #
+# -------------- #
+print('Data summarization')
+print('------------------')
+# shape
+print('\nDataset size: ', merged_df.shape)
+
+# head
+print('\nFirst 10 lines of data:\n', merged_df.head(10))
+
+# descriptions
+print('\nSummary stats of data:\n', merged_df.describe())
+
+# class distribution
+print('\nClass distribution:\n', merged_df.groupby('team_abbreviation_home').size())
+
+# explore data visually #
+# --------------------- #
+
+# box and whisker plots
+merged_df.iloc[:, 12:].plot(kind='box', subplots=True, layout=(4,6), sharex=False, sharey=False)
+plt.show()
+
+# histograms
+merged_df.iloc[:, 12:].hist()
+plt.show()
+
 # Pie chart of wl_home
 wl_home_count_list = merged_df["wl_home"].value_counts().tolist()
 wl_home_list = merged_df["wl_home"].value_counts().keys().tolist()
