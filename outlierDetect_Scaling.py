@@ -121,12 +121,12 @@ for filename in files:
 # Slice off non-numeric columns
 #df_slice = df.drop(['game_date', 'team_abbreviation_home', 'team_abbreviation_away'], axis=1)
 # Set our x and y variables
-    X=df.values[:,13:]
+    X=df.values[:,12:]
     # Create a list of column names to add to our new scaled dataframe
-    X_colnames= df.columns[13:]
+    X_colnames= df.columns[12:]
     # Create a data frame with our non-numerical data
     df_extra = df[['team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd']]
-    Y=df.values[:,4].astype(int)
+    Y=df.values[:,7].astype(int)
 
     # Scale the data
     scaler = preprocessing.StandardScaler().fit(X)
@@ -143,19 +143,19 @@ for filename in files:
     print (scaled_df)
     scaled_df.to_csv (f'{filename}_outliers_removed_scaled.csv', index = False)
 
-test_set = pd.read_csv(f'./testing2022.csv/')
+test_set = pd.read_csv('testing2022.csv')
 test_scaled = scaler.transform(X)
 
 # Create a new DataFrame with the scaled values and the original column names
-scaled_df = pd.DataFrame(test_scaled, columns=X_colnames)
+scaled_df_test = pd.DataFrame(test_scaled, columns=X_colnames)
 # Concatenate our scaled_df with df_extra, which has our extra (categorical) data
-scaled_df = pd.concat([scaled_df.reset_index(drop=True), df_extra], axis=1)
+scaled_df_test = pd.concat([scaled_df_test.reset_index(drop=True), df_extra], axis=1)
 
 # Add the target column to the new DataFrame
-scaled_df['wl_home'] = Y
+scaled_df_test['wl_home'] = Y
 
-print (scaled_df)
-scaled_df.to_csv (f'{test_set}_outliers_removed_scaled.csv', index = False)
+print (scaled_df_test)
+scaled_df_test.to_csv (f'./scaled_training_sets/test_set_outliers_removed_scaled.csv', index = False)
 
 
 #scaled_df.to_csv ('df_outliers_removed_RFE_Xscaled.csv', index = False)
