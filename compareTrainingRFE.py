@@ -18,10 +18,10 @@ import pandas as pd
 directory = "RFE_splits1"
 file_extension = ".csv"
 
-# Create an empty dictionary to store the data frames and their column names
+# # Create an empty dictionary to store the data frames and their column names
 data_frames = {}
 
-# Loop over all files in the directory
+# # Loop over all files in the directory
 for file_name in os.listdir(directory):
     # Check if the file has the correct file extension
     if file_name.endswith(file_extension):
@@ -32,7 +32,7 @@ for file_name in os.listdir(directory):
         # Store the column names in a list for each data frame
         column_names = list(df.columns)
         # Print the column names for this data frame
-        #print(f"Column names for {file_name}: {column_names} \n")
+       # print(f"Column names for {file_name}: {column_names} \n")
 
 #This code creates a set of the column names for the first data frame in the dictionary, then loops over all the other data frames and updates the set of common column names with the intersection of the current data frame's columns and the existing set. Finally, it prints the resulting set of common column names.
 # Create a set of the column names for the first data frame in the dictionary

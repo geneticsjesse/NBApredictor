@@ -6,7 +6,7 @@
 # Author:   Jesse Wolf, jwolf@uoguelph.ca | Thomas Papp-Simon, tpappsim@uoguelph.ca
 # Date:     April 4 2023
 
-# How to run:   python3  stackingClassifier.py  -in_trainfile training2015-2021.csv_outliers_removed_scaled_RFECOPY_JW in_testfile test_set_outliers_removed_scaled.csv
+# How to run:   python3  stackingClassifier_2.py  --in_trainfile training2015-2021.csv_outliers_removed_scaled_RFECOPY_JW.csv --in_testfile test_set_outliers_removed_scaled.csv
 # ================= #
 import argparse
 import sys
@@ -90,12 +90,12 @@ X_test, y_test = read_test()
 def get_stacking():
  # define the base models - UPDATE THESE WITH TUNED HP 
  level0 = list()
- level0.append(('lr', LogisticRegression(max_iter=100000)))#solver = 'lbfgs', max_iter=100000)))
- level0.append(('knn', KNeighborsClassifier()))#n_neighbors=5)))
- level0.append(('rf', RandomForestClassifier (random_state=0)))#n_estimators=100, random_state=0)))
- level0.append(('svm', SVC(gamma='auto', random_state=0)))#, C=1.0)))
+ level0.append(('lr', LogisticRegression(max_iter=1000000, random_state=2)))
+ level0.append(('knn', KNeighborsClassifier()))
+ level0.append(('rf', RandomForestClassifier (random_state=2)))
+ level0.append(('svm', SVC(gamma='auto', random_state=2)))
  level0.append(('NB', GaussianNB()))
- level0.append(('mlp', MLPClassifier(random_state=0)))#(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)))
+ level0.append(('mlp', MLPClassifier(random_state=2)))
  
  # define meta learner model
  level1 = LogisticRegression()
@@ -111,7 +111,7 @@ models.append(('rf', RandomForestClassifier (random_state=0)))
 models.append (('svm', SVC(gamma='auto', random_state=0)))
 models.append(('nb', GaussianNB()))
 models.append(('mlp', MLPClassifier(random_state=0)))#solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)))
-#models.append(('stacking', get_stacking()))
+models.append(('stacking', get_stacking()))
 
 # evaluate a given model using cross-validation
 print('\nModel evalution - training')
@@ -163,9 +163,9 @@ model_params['mlp']['hidden_layer_sizes'] = [(50,50,50), (50,100,50), (100,)]
 model_params['mlp']['solver'] = ['sgd', 'adam']
 model_params['mlp']['alpha'] = list(arange(0.0001, 0.001, 0.0001))
 model_params['mlp']['learning_rate'] = ['constant','adaptive']
-#model_params['stacking'] = dict()
-#model_params['stacking']['cv'] = list(arange(0,10,2))
-#model_params['stacking']['final_estimator'] = [LogisticRegression(max_iter=10000000), RandomForestClassifier()]#, KNeighborsClassifier()], XGBClassifier()]
+model_params['stacking'] = dict()
+model_params['stacking']['cv'] = list(arange(0,10,2))
+model_params['stacking']['final_estimator'] = [LogisticRegression(max_iter=10000000), SVC()]
 
 best_params = dict()
 for name, model in models:
@@ -186,9 +186,15 @@ optimized_models.append(('rf', RandomForestClassifier(n_estimators=best_params['
 optimized_models.append(('knn', KNeighborsClassifier(n_neighbors=best_params['knn']['n_neighbors'])))
 optimized_models.append(('nb', GaussianNB(var_smoothing=best_params['nb']['var_smoothing'])))
 optimized_models.append(('svm', SVC(gamma='auto',C=best_params['svm']['C'], kernel=best_params['svm']['kernel'], class_weight=best_params['svm']['class_weight'], degree=best_params['svm']['degree'], random_state=2)))
-optimized_models.append(('mlp', MLPClassifier (activation=best_params['mlp']['activation'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'],
-                                                solver = best_params['mlp']['solver'], alpha = best_params['mlp']['alpha'], learning_rate=best_params['mlp']['learning_rate'], max_iter=10000, random_state=2)))
-#optimized_models.append(('stacking', StackingClassifier(estimators= [('lr', LogisticRegression()), ('knn', KNeighborsClassifier()), ('rf', RandomForestClassifier(random_state=0)), ('svm', SVC(gamma='auto')), ('NB', GaussianNB()), ('mlp', MLPClassifier())], cv = best_params['stacking']['cv'], final_estimator=best_params['stacking']['final_estimator'])))
+optimized_models.append(('mlp', MLPClassifier (activation=best_params['mlp']['activation'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], solver = best_params['mlp']['solver'], alpha = best_params['mlp']['alpha'], learning_rate=best_params['mlp']['learning_rate'], max_iter=10000, random_state=2)))
+
+# Need to append stacking to optimized models
+optimized_models.append(('stacking', StackingClassifier(estimators= [(LogisticRegression(multi_class='ovr', C=best_params['lr']['C'], class_weight=best_params['lr']['class_weight'], solver=best_params['lr']['solver'], max_iter=best_params['lr']['max_iter'], random_state=2)), 
+(KNeighborsClassifier(n_neighbors=best_params['knn']['n_neighbors'])), 
+(RandomForestClassifier(n_estimators=best_params['rf']['n_estimators'], max_samples=best_params['rf']['max_samples'], max_depth=best_params['rf']['max_depth'], criterion=best_params['rf']['criterion'], random_state=2)), 
+(SVC(gamma='auto',C=best_params['svm']['C'], kernel=best_params['svm']['kernel'], class_weight=best_params['svm']['class_weight'], degree=best_params['svm']['degree'], random_state=2)), 
+(GaussianNB(var_smoothing=best_params['nb']['var_smoothing'])), 
+(MLPClassifier(activation=best_params['mlp']['activation'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], solver = best_params['mlp']['solver'], alpha = best_params['mlp']['alpha'], learning_rate=best_params['mlp']['learning_rate'], max_iter=10000, random_state=2))], cv = best_params['stacking']['cv'], final_estimator=best_params['stacking']['final_estimator'])))
 
 print('\nModel evalution - optimized')
 print('--------------------------')
@@ -228,4 +234,4 @@ for name, model in optimized_models:
 	plt.xlabel('Ground truth')
 	plt.ylabel('Predicted results')
 
-	# plt.show()
+	plt.show()
