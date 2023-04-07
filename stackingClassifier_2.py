@@ -6,12 +6,11 @@
 # Author:   Jesse Wolf, jwolf@uoguelph.ca | Thomas Papp-Simon, tpappsim@uoguelph.ca
 # Date:     April 4 2023
 
-# How to run:   python3  stackingClassifier.py  -in merged_df_outliers_removed_CFS_Xscaled.csv
+# How to run:   python3  stackingClassifier.py  -in_trainfile training2015-2021.csv_outliers_removed_scaled_RFECOPY_JW in_testfile test_set_outliers_removed_scaled.csv
 # ================= #
 import argparse
 import sys
 import os
-from sklearn import preprocessing
 import matplotlib.pyplot as plt 
 from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score, train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -30,7 +29,7 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 # define command line arguments
 parser = argparse.ArgumentParser(description='Classification Models')
-parser.add_argument('--in_trainfile', '-train', action="store", dest='in_trainfile', required=True, help='Name of training csv input file. The last colum of the file is the desired output.')
+parser.add_argument('--in_trainfile', '-train', action="store", dest='in_trainfile', required=True, help='Name of training csv input file.')
 parser.add_argument('--in_testfile', '-test', action="store", dest='in_testfile', required=True, help='Name of testing csv input file. The last colum of the file is the desired output.')
 
 # handle user errors
@@ -57,7 +56,7 @@ def read_train():
     nc      = len(varray[0,:])-1
     #X       = varray[:,9:]
     #Y       = varray [:,5]
-    X       = varray[:,1:18]
+    X       = varray[:,0:9] #0-18 typically
     Y       = varray[:,nc]
     return X, Y
 
@@ -77,7 +76,7 @@ def read_test():
     nc      = len(varray[0,:])-1
     #X       = varray[:,9:]
     #Y       = varray [:,5]
-    X       = varray[:,1:18]
+    X       = varray[:,0:9] #0-18 typically
     Y       = varray[:,nc]
     return X, Y
 
@@ -89,7 +88,7 @@ X_test, y_test = read_test()
 
 # get a stacking ensemble of models
 def get_stacking():
- # define the base models
+ # define the base models - UPDATE THESE WITH TUNED HP 
  level0 = list()
  level0.append(('lr', LogisticRegression(max_iter=100000)))#solver = 'lbfgs', max_iter=100000)))
  level0.append(('knn', KNeighborsClassifier()))#n_neighbors=5)))
@@ -222,11 +221,11 @@ for name, model in optimized_models:
 	predicted_results = model.predict(X_test)
 	acc_result = matthews_corrcoef(predicted_results,y_test)
 	print('%s Matthews Correlation Coefficient: %f' % (name, acc_result))
-	# cm = confusion_matrix(predicted_results,Y_test)
-	# disp = ConfusionMatrixDisplay(confusion_matrix=cm)
-	# disp.plot()
-	# plt.title('Confusion matrix corresp. to test results for ' + name)
-	# plt.xlabel('Ground truth')
-	# plt.ylabel('Predicted results')
+	cm = confusion_matrix(predicted_results,y_test)
+	disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+	disp.plot()
+	plt.title('Confusion matrix corresp. to test results for ' + name)
+	plt.xlabel('Ground truth')
+	plt.ylabel('Predicted results')
 
 	# plt.show()
