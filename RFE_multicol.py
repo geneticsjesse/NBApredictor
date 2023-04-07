@@ -74,6 +74,8 @@ for filename in files:
     if filename_re:
         new_filename = filename_re.group(1)
 
+    # df_rfe_corrmatrix = pd.concat([merged_df[selected_features_rfe].reset_index(drop=True)], axis=1)
+
     df_rfe_clean = pd.concat([merged_df[selected_features_rfe].reset_index(drop=True), df_extra], axis=1)
     df_rfe_clean.to_csv (f'./RFE_splits1/RFE_{new_filename}.csv', index = False)
 
@@ -151,15 +153,15 @@ for filename in files:
 
     # Perfect, we have no more pairwise variables with a pearson correlation coefficient >0.5. In addition, we have no variables with a VIF value over 5. We plot our final correlation matrix and output our new data frame.
     # set figure size
-    plt.figure(figsize=(18,15))
+    # plt.figure(figsize=(18,15))
 
-    # Generate a mask to onlyshow the bottom triangle
-    mask = np.triu(np.ones_like(df_rfe_clean.corr(), dtype=bool))
+    # # Generate a mask to onlyshow the bottom triangle
+    # mask = np.triu(np.ones_like(df_rfe_corrmatrix.corr(), dtype=bool))
 
-    # generate heatmap
-    sns.heatmap(df_rfe_clean.corr(), annot=True, mask=mask, vmin=-1, vmax=1)
-    plt.title('Correlation Coefficient Of Predictors')
-    plt.savefig(f'collinearityPlots/{new_filename}_corrmatrix.png')
+    # # generate heatmap
+    # sns.heatmap(df_rfe_corrmatrix.corr(), annot=True, mask=mask, vmin=-1, vmax=1)
+    # plt.title('Correlation Coefficient Of Predictors')
+    # plt.savefig(f'collinearityPlots/{new_filename}_corrmatrix.png')
     # plt.show()
 
     # Combine df_continuous and df_extra after removing pearson correlations >0.5 and VIF values >5
