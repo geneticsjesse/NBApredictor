@@ -15,8 +15,8 @@ import pandas as pd
 # train_2015_2021_cols = training_2015_2021.columns
 
 #This code should loop over all files in the scaled_training_sets directory and only process the ones with the .csv file extension and ending with RFE.csv. It then loads each data frame from the CSV file and stores it in a dictionary using the file name as the key. Finally, it creates a list of column names for each data frame and prints them to the console.
-directory = "scaled_training_sets"
-file_extension = "RFE.csv"
+directory = "RFE_splits1"
+file_extension = ".csv"
 
 # Create an empty dictionary to store the data frames and their column names
 data_frames = {}
