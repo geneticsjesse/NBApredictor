@@ -55,13 +55,10 @@ for df, ax in zip(df_list, axs.ravel()):
     X=df.values[:,]
     Y=df.values[:,-1:].astype(int)
 
-    # Scale the data to facilitate feature selection
-    # scaler = preprocessing.StandardScaler().fit(X)
-    # X_scaled = scaler.transform(X)
-
     # Feature selectionn
     model = LogisticRegression(solver='lbfgs', max_iter=1000)
-    model.fit(X,Y) ####### Here we can specify X or X_scaled
+    model.fit(X,Y.ravel()) 
+    RFE_model = RFE(estimator=model, n_features_to_select=len(X))
     # rfe = RFE(model, n_features_to_select = 5)
     # fit = rfe.fit(X,Y)
 
@@ -72,8 +69,7 @@ for df, ax in zip(df_list, axs.ravel()):
     })
     # Sort in descending order
     importances = importances.sort_values(by='Importance', ascending=False)
-
-
+    importances = importances.iloc[1:]
     ax.bar(x=importances['Attribute'], height=importances['Importance'], color='#087E8B')
     ax.set_ylabel('Importance')
     ax.tick_params(axis='x', labelrotation=90)
