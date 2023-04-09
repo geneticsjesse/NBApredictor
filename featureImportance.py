@@ -75,8 +75,8 @@ for df, ax in zip(df_list, axs.ravel()):
     ax.tick_params(axis='x', labelrotation=90)
 
     name =[x for x in globals() if globals()[x] is df][0]
-    if name == 'df_CFS':
-        ax.set_title('Feature Importance (CFS)')
+    if name == 'df_base_features':
+        ax.set_title('Feature Importance (baseline)')
     else:
         ax.set_title('Feature Importance (RFE)')
     
