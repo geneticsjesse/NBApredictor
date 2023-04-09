@@ -73,13 +73,13 @@ for df in df_list:
         ax_idx.set_title(f"Learning Curve for {estimator.__class__.__name__}")
         
 
-        # name =[x for x in globals() if globals()[x] is df][0]
-        # if name == df_base:
-        #     plt.suptitle("Learning Curves (Baseline)")
-        # elif name == df_rfe:
-        #     plt.suptitle("Learning Curves (RFE 9 Common Features)")
-        # elif name == df_rfe_all:
-        #     plt.suptitle("Learning Curves (RFE 2015-2021)")
+    name =[x for x in globals() if globals()[x] is df][0]
+    # if name == df_base:
+    #     plt.suptitle("Learning Curves (Baseline)")
+    # elif name == df_rfe:
+    #     plt.suptitle("Learning Curves (RFE 9 Common Features)")
+    # elif name == df_rfe_all:
+    #     plt.suptitle("Learning Curves (RFE 2015-2021)")
 
     plt.subplots_adjust(left=0.1,
                         bottom=0.1,
