@@ -188,13 +188,17 @@ optimized_models.append(('nb', GaussianNB(var_smoothing=best_params['nb']['var_s
 optimized_models.append(('svm', SVC(gamma='auto',C=best_params['svm']['C'], kernel=best_params['svm']['kernel'], class_weight=best_params['svm']['class_weight'], degree=best_params['svm']['degree'], random_state=2)))
 optimized_models.append(('mlp', MLPClassifier (activation=best_params['mlp']['activation'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], solver = best_params['mlp']['solver'], alpha = best_params['mlp']['alpha'], learning_rate=best_params['mlp']['learning_rate'], max_iter=10000, random_state=2)))
 
+# create a list of tuples containing the optimized models and their names
+optimized_models_forStacking = [('lr', LogisticRegression(C=best_params['lr']['C'], class_weight=best_params['lr']['class_weight'], max_iter=best_params['lr']['max_iter'], multi_class='ovr', random_state=2, solver=best_params['lr']['solver'])),
+    ('rf', RandomForestClassifier(criterion=best_params['rf']['criterion'], max_depth=best_params['rf']['max_depth'], max_samples=best_params['rf']['max_samples'], n_estimators=best_params['rf']['n_estimators'], random_state=2)),
+    ('knn', KNeighborsClassifier(n_neighbors=best_params['knn']['n_neighbors'])),
+    ('nb', GaussianNB(var_smoothing=best_params['nb']['var_smoothing'])),
+    ('svm', SVC(C=best_params['svm']['C'], class_weight=best_params['svm']['class_weight'], degree=best_params['svm']['degree'], gamma='auto', kernel=best_params['svm']['kernel'], random_state=2)),
+    ('mlp', MLPClassifier(activation=best_params['mlp']['activation'], alpha=best_params['mlp']['alpha'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], learning_rate=best_params['mlp']['learning_rate'], max_iter=10000, random_state=2, solver=best_params['mlp']['solver']))
+]
+
 # Need to append stacking to optimized models
-optimized_models.append(('stacking', StackingClassifier(estimators= [(LogisticRegression(multi_class='ovr', C=best_params['lr']['C'], class_weight=best_params['lr']['class_weight'], solver=best_params['lr']['solver'], max_iter=best_params['lr']['max_iter'], random_state=2)), 
-(KNeighborsClassifier(n_neighbors=best_params['knn']['n_neighbors'])), 
-(RandomForestClassifier(n_estimators=best_params['rf']['n_estimators'], max_samples=best_params['rf']['max_samples'], max_depth=best_params['rf']['max_depth'], criterion=best_params['rf']['criterion'], random_state=2)), 
-(SVC(gamma='auto',C=best_params['svm']['C'], kernel=best_params['svm']['kernel'], class_weight=best_params['svm']['class_weight'], degree=best_params['svm']['degree'], random_state=2)), 
-(GaussianNB(var_smoothing=best_params['nb']['var_smoothing'])), 
-(MLPClassifier(activation=best_params['mlp']['activation'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], solver = best_params['mlp']['solver'], alpha = best_params['mlp']['alpha'], learning_rate=best_params['mlp']['learning_rate'], max_iter=10000, random_state=2))], cv = best_params['stacking']['cv'], final_estimator=best_params['stacking']['final_estimator'])))
+optimized_models.append(('stacking', StackingClassifier(estimators= optimized_models_forStacking, cv = best_params['stacking']['cv'], final_estimator=best_params['stacking']['final_estimator'])))
 
 print('\nModel evalution - optimized')
 print('--------------------------')
