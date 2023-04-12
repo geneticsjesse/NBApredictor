@@ -60,7 +60,7 @@ for df in df_list:
 
     model_list = [gnb, knn, ann, linear, rf, svc]
 
-    #fig, ax = plt.subplots(nrows=3, ncols=2, figsize=(10, 10), squeeze=False)
+    fig, ax = plt.subplots(nrows=3, ncols=2, figsize=(10, 10), squeeze=False)
 
     common_params = {
         "X": X,
@@ -74,34 +74,34 @@ for df in df_list:
         "score_name": "MCC",
     }
 
-    # for ax_idx, estimator in zip(ax.ravel(), model_list):
-    #     LearningCurveDisplay.from_estimator(estimator, **common_params, ax=ax_idx, scoring="matthews_corrcoef")
-    #     handles, label = ax_idx.get_legend_handles_labels()
-    #     ax_idx.legend(handles[:2], ["Training Score", "Test Score"])
-    #     ax_idx.set_title(f"Learning Curve for {estimator.__class__.__name__}")
+    for ax_idx, estimator in zip(ax.ravel(), model_list):
+        LearningCurveDisplay.from_estimator(estimator, **common_params, ax=ax_idx, scoring="matthews_corrcoef")
+        handles, label = ax_idx.get_legend_handles_labels()
+        ax_idx.legend(handles[:2], ["Training Score", "Test Score"])
+        ax_idx.set_title(f"Learning Curve for {estimator.__class__.__name__}")
         
 
-    # name =[x for x in globals() if globals()[x] is df][0]
-    # # if name == df_base:
-    # #     plt.suptitle("Learning Curves (Baseline)")
-    # # elif name == df_rfe:
-    # #     plt.suptitle("Learning Curves (RFE 9 Common Features)")
-    # # elif name == df_rfe_all:
-    # #     plt.suptitle("Learning Curves (RFE 2015-2021)")
+    name =[x for x in globals() if globals()[x] is df][0]
+    # if name == df_base:
+    #     plt.suptitle("Learning Curves (Baseline)")
+    # elif name == df_rfe:
+    #     plt.suptitle("Learning Curves (RFE 9 Common Features)")
+    # elif name == df_rfe_all:
+    #     plt.suptitle("Learning Curves (RFE 2015-2021)")
 
-    # plt.subplots_adjust(left=0.1,
-    #                     bottom=0.1,
-    #                     right=0.9,
-    #                     top=0.9,
-    #                     wspace=0.4,
-    #                     hspace=0.4)
+    plt.subplots_adjust(left=0.1,
+                        bottom=0.1,
+                        right=0.9,
+                        top=0.9,
+                        wspace=0.4,
+                        hspace=0.4)
 
-    #plt.savefig(f'learningCurves/{name}_LearningCurves.png')    
-    #plt.show()
+    plt.savefig(f'learningCurves/{name}_LearningCurves.png')    
+    plt.show()
 
     fig, ax = plt.subplots(1,1, figsize = (10, 7))
     LearningCurveDisplay.from_estimator(stacking, **common_params, ax=ax, scoring="matthews_corrcoef")
-    #handles, label = ax_idx.get_legend_handles_labels()
     ax.legend(["Training Score", "Test Score"])
     ax.set_title(f"Learning Curve for Stacking Classifier")
+    plt.savefig(f'{name}_StackingClassifer_LearningCurves.png')
     plt.show()

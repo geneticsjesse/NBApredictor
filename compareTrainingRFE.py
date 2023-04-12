@@ -35,19 +35,7 @@ for file_name in os.listdir(directory):
        # print(f"Column names for {file_name}: {column_names} \n")
 
 #This code creates a set of the column names for the first data frame in the dictionary, then loops over all the other data frames and updates the set of common column names with the intersection of the current data frame's columns and the existing set. Finally, it prints the resulting set of common column names.
-# Create a set of the column names for the first data frame in the dictionary
-# common_columns = set(data_frames[list(data_frames.keys())[0]].columns)
 
-# # Loop over all other data frames in the dictionary
-# for key in list(data_frames.keys())[1:]:
-#     # Update the set of common column names with the intersection of the current data frame's columns and the existing set
-#     common_columns = common_columns.intersection(set(data_frames[key].columns))
-
-# # Print the common column names, or a message if there are no common column names
-# if len(common_columns) > 0:
-#     print(f"Common column names: {common_columns}")
-# else:
-#     print("No common column names")
 # Create a list of the column names for the first data frame in the dictionary
 common_columns = list(data_frames[list(data_frames.keys())[0]].columns)
 
@@ -70,20 +58,4 @@ if len(common_columns) > 0:
 else:
     print("No common column names")
 
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-# Create a list of the column names for each data frame
-column_lists = [list(data_frames[key].columns) for key in data_frames]
-
-# Compute the overlap between each pair of column lists
-overlap_matrix = [[len(set(column_lists[i]).intersection(set(column_lists[j]))) for j in range(len(column_lists))] for i in range(len(column_lists))]
-
-# Create a heatmap of the overlap matrix
-sns.heatmap(overlap_matrix, cmap="YlGnBu", annot=True, fmt="d")
-plt.xticks(range(len(data_frames)), list(data_frames.keys()), rotation=90)
-plt.yticks(range(len(data_frames)), list(data_frames.keys()), rotation=0)
-plt.xlabel("Data Frame")
-plt.ylabel("Data Frame")
-plt.title("Overlap between Common Columns")
-plt.show()
+train2015_2021 = pd.read_csv('RFE_training2015-2021.csv') 
