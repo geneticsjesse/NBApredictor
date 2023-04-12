@@ -86,7 +86,7 @@ plt.pie(wl_home_count_list,
                       'linewidth': 1,
                       'antialiased': True})
 plt.title("Win/Loss Home Distribution")
-#plt.savefig(f"wl_home_piechart.png")
+plt.savefig(f"wl_home_piechart.png")
 plt.show()
 
 # The pie chart produced above shows us the home team wins ~57% of the time, meaning we will need to stratify our data when performing cross validation, to avoid an imbalanced training/testing split.
@@ -98,4 +98,4 @@ merged_df['wl_home'] = merged_df['wl_home'].map({'W': 1, 'L': 0})
 print("There are", merged_df.isnull().sum().sum(), "missing values in the merged dataset.") 
 
 # Writing to csv
-#merged_df.to_csv('merged_df.csv', index=False)
+merged_df.to_csv('merged_df.csv', index=False)
