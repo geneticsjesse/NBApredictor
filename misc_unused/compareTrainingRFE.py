@@ -10,10 +10,6 @@
 import os
 import pandas as pd
 
-# 2015 - 2021 training set
-# training_2015_2021 = pd.read_csv('scaled_training_sets/training2015-2021.csv_outliers_removed_scaled.csv_RFE.csv')
-# train_2015_2021_cols = training_2015_2021.columns
-
 #This code should loop over all files in the scaled_training_sets directory and only process the ones with the .csv file extension and ending with RFE.csv. It then loads each data frame from the CSV file and stores it in a dictionary using the file name as the key. Finally, it creates a list of column names for each data frame and prints them to the console.
 directory = "RFE_splits1"
 file_extension = ".csv"
@@ -58,4 +54,12 @@ if len(common_columns) > 0:
 else:
     print("No common column names")
 
-train2015_2021 = pd.read_csv('RFE_training2015-2021.csv') 
+# Read in train and test sets to create our RFE-common datasets
+train2015_2021 = pd.read_csv('RFE_splits1/RFE_training2015-2021.csv')
+test = pd.read_csv('test_set_outliers_removed_scaled.csv') 
+
+train2015_2021 = train2015_2021.loc[:, common_columns]
+test = test.loc[:, common_columns]
+
+train2015_2021.to_csv('train2015_2021_RFEcommon.csv', index=False)
+test.to_csv('test_RFEcommon.csv', index = False)
