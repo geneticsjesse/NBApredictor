@@ -62,7 +62,7 @@ for filename in files:
     # df_rfe_corrmatrix = pd.concat([merged_df[selected_features_rfe].reset_index(drop=True)], axis=1)
 
     df_rfe_clean = pd.concat([merged_df[selected_features_rfe].reset_index(drop=True), df_extra], axis=1)
-    df_rfe_clean.to_csv (f'./RFE_splits1/RFE_{new_filename}.csv', index = False)
+    df_rfe_clean.to_csv (f'./RFE_splits/RFE_{new_filename}.csv', index = False)
 
 
 
