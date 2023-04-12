@@ -1,5 +1,5 @@
 # ===================== #
-# Classification models #
+# Running classification models and hyperparameter optimization #
 # ===================== #
 
 # Source: https://machinelearningmastery.com/stacking-ensemble-machine-learning-with-python/
@@ -10,9 +10,8 @@
 # ================= #
 import argparse
 import sys
-import os
 import matplotlib.pyplot as plt 
-from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score, train_test_split
+from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB
@@ -54,9 +53,7 @@ def read_train():
 # separate input and output variables
     varray  = df_slice.values
     nc      = len(varray[0,:])-1
-    #X       = varray[:,9:]
-    #Y       = varray [:,5]
-    X       = varray[:,0:9] #0-18 typically
+    X       = varray[:,0:nc] #0-18 typically
     Y       = varray[:,nc]
     return X, Y
 
@@ -74,21 +71,15 @@ def read_test():
 # separate input and output variables
     varray  = df_slice.values
     nc      = len(varray[0,:])-1
-    #X       = varray[:,9:]
-    #Y       = varray [:,5]
-    X       = varray[:,0:9] #0-18 typically
+    X       = varray[:,0:nc] #0-18 typically
     Y       = varray[:,nc]
     return X, Y
 
 # define dataset
 X_test, y_test = read_test()
 
-# separate data into training/validation and testing datasets
-#X_train, X_test, Y_train, Y_test = train_test_split(X, y, test_size=0.20, random_state=1, shuffle=True)
-
 # get a stacking ensemble of models
 def get_stacking():
- # define the base models - UPDATE THESE WITH TUNED HP 
  level0 = list()
  level0.append(('lr', LogisticRegression(max_iter=1000000, random_state=2)))
  level0.append(('knn', KNeighborsClassifier()))
@@ -110,7 +101,7 @@ models.append (('knn', KNeighborsClassifier()))
 models.append(('rf', RandomForestClassifier (random_state=0)))
 models.append (('svm', SVC(gamma='auto', random_state=0)))
 models.append(('nb', GaussianNB()))
-models.append(('mlp', MLPClassifier(random_state=0)))#solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)))
+models.append(('mlp', MLPClassifier(random_state=0)))
 models.append(('stacking', get_stacking()))
 
 # evaluate a given model using cross-validation
@@ -119,8 +110,7 @@ print('--------------------------')
 results = []
 names = []
 for name, model in models:
-        # FIX N_REPEATS TO 3 NOT 1
-	kfold = RepeatedStratifiedKFold(n_splits=10, n_repeats=1, random_state=1)
+	kfold = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
 	cv_results = cross_val_score(model, X_train, y_train, cv=kfold, scoring='matthews_corrcoef')
 	results.append(cv_results)
 	names.append(name)
@@ -169,12 +159,8 @@ model_params['stacking']['final_estimator'] = [LogisticRegression(max_iter=10000
 
 best_params = dict()
 for name, model in models:
-    # FIX N_REPEATS =3 NOT 1
-    cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=1, random_state=1)
-    # FIX N_ITER TO 5 NOT 1
-    #grid_search = GridSearchCV(estimator=model, param_grid=model_params[model], cv =cv, n_jobs=4, scoring= "matthews_corrcoef", refit=True, return_train_score=False)
-    #grid_result = grid_search.fit(X_train, Y_train)
-    rand_search = RandomizedSearchCV(estimator=model, param_distributions=model_params[name], n_iter=1, n_jobs=-1, cv=cv, scoring='matthews_corrcoef')
+    cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
+    rand_search = RandomizedSearchCV(estimator=model, param_distributions=model_params[name], n_iter=5, n_jobs=-1, cv=cv, scoring='matthews_corrcoef')
     rand_result = rand_search.fit(X_train, y_train)
     print("Model %s -- Best: %f using %s" % (name, rand_result.best_score_, rand_result.best_params_))
     best_params[name] = rand_result.best_params_
@@ -188,7 +174,7 @@ optimized_models.append(('nb', GaussianNB(var_smoothing=best_params['nb']['var_s
 optimized_models.append(('svm', SVC(gamma='auto',C=best_params['svm']['C'], kernel=best_params['svm']['kernel'], class_weight=best_params['svm']['class_weight'], degree=best_params['svm']['degree'], random_state=2)))
 optimized_models.append(('mlp', MLPClassifier (activation=best_params['mlp']['activation'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], solver = best_params['mlp']['solver'], alpha = best_params['mlp']['alpha'], learning_rate=best_params['mlp']['learning_rate'], max_iter=10000, random_state=2)))
 
-# create a list of tuples containing the optimized models and their names
+# create a list of tuples containing the optimized models and their names to use for appending our stacking classifier to the optimized models list
 optimized_models_forStacking = [('lr', LogisticRegression(C=best_params['lr']['C'], class_weight=best_params['lr']['class_weight'], max_iter=best_params['lr']['max_iter'], multi_class='ovr', random_state=2, solver=best_params['lr']['solver'])),
     ('rf', RandomForestClassifier(criterion=best_params['rf']['criterion'], max_depth=best_params['rf']['max_depth'], max_samples=best_params['rf']['max_samples'], n_estimators=best_params['rf']['n_estimators'], random_state=2)),
     ('knn', KNeighborsClassifier(n_neighbors=best_params['knn']['n_neighbors'])),
@@ -196,7 +182,6 @@ optimized_models_forStacking = [('lr', LogisticRegression(C=best_params['lr']['C
     ('svm', SVC(C=best_params['svm']['C'], class_weight=best_params['svm']['class_weight'], degree=best_params['svm']['degree'], gamma='auto', kernel=best_params['svm']['kernel'], random_state=2)),
     ('mlp', MLPClassifier(activation=best_params['mlp']['activation'], alpha=best_params['mlp']['alpha'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], learning_rate=best_params['mlp']['learning_rate'], max_iter=10000, random_state=2, solver=best_params['mlp']['solver']))
 ]
-
 # Need to append stacking to optimized models
 optimized_models.append(('stacking', StackingClassifier(estimators= optimized_models_forStacking, cv = best_params['stacking']['cv'], final_estimator=best_params['stacking']['final_estimator'])))
 
@@ -205,8 +190,7 @@ print('--------------------------')
 results = []
 names = []
 for name, model in optimized_models:
-        # FIX N_REPEATS =3 NOT 1
-	kfold = RepeatedStratifiedKFold(n_splits=10, n_repeats=1, random_state=1)
+	kfold = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
 	cv_results = cross_val_score(model, X_train, y_train, cv=kfold, scoring='matthews_corrcoef')
 	results.append(cv_results)
 	names.append(name)
