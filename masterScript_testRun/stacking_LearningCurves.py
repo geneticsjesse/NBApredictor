@@ -23,7 +23,7 @@ from sklearn.ensemble import RandomForestClassifier, StackingClassifier
 
 # load the dataset; header is first row
 df_base = pd.read_csv('./scaled_training_sets/training2015-2021_outliers_removed_scaled.csv', header=0)
-df_rfe = pd.read_csv('./RFE_splits/train2015_2021_RFEcommon.csv', header=0)
+df_rfe_common = pd.read_csv('./RFE_splits/train2015_2021_RFEcommon.csv', header=0)
 df_rfe_all = pd.read_csv('./RFE_splits/RFE_training2015-2021_outliers_removed_scaled.csv', header=0)
 
 # Create stacking function
@@ -43,7 +43,7 @@ def get_stacking():
  return model
 
 # Create a list of our three dataframes
-df_list = [df_base, df_rfe, df_rfe_all]
+df_list = [df_base, df_rfe_common, df_rfe_all]
 
 for df in df_list:
     # remove non-integer columns to plot

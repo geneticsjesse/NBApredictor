@@ -2,7 +2,7 @@
 # Author:   Jesse Wolf, jwolf@uoguelph.ca | Thomas Papp-Simon, tpappsim@uoguelph.ca
 # Date:     March 18, 2023
 
-# How to run: python3 .\featureImportance.py -base .\scaled_training_sets\training2015-2021.csv_outliers_removed_scaled.csv -rfe .\RFE_splits1\RFE_training2015-2021.csv -rfe9 .\training2015-2021.csv_outliers_removed_scaled_RFECOPY_JW.csv
+# How to run: python3 .\featureImportance.py -base .\scaled_training_sets\training2015-2021_outliers_removed_scaled.csv -rfe .\RFE_splits1\RFE_training2015-2021_outliers_removed_scaled.csv -rfe9 .\RFE_splits\train2015_2021_RFEcommon.csv
 # ================= #
 
 #from sklearn.feature_selection import RFE
@@ -77,7 +77,6 @@ for df, ax in zip(df_list, axs.ravel()):
         ax.set_title('Feature Importance (RFE common features)')
 
 pyplot.savefig(f"./featureImportance/feature_Importance_base_RFE.png")
-pyplot.show()
 
 
 # Plotting the feature importance plot for all features selected by RFE for 2015-2021 training set separately.
@@ -109,6 +108,3 @@ if name == 'df_RFE_all_features':
     axs.set_title("Feature Importance (RFE all features)")
 
 pyplot.savefig(f"./featureImportance/feature_Importance_base_RFE_all.png")
-pyplot.show()
-
-

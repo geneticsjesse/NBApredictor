@@ -13,6 +13,7 @@ os.system("python dataCleaning.py -gamedata gamedata.csv -teamdata combinedTeamD
 os.system("python trainTestSplit.py -in merged_df.csv")
 os.system("python outlierDetect_Scaling.py")
 os.system("python RFE_multicol.py")
-# Add feature importance
+os.system("python featureImportance.py -base ./scaled_training_sets/training2015-2021_outliers_removed_scaled.csv -rfe ./RFE_splits/RFE_training2015-2021_outliers_removed_scaled.csv -rfe9 ./RFE_splits/train2015_2021_RFEcommon.csv")
 os.system("python learningCurves.py")
-os.system("python stackingClassifier_2.py")
+os.system("python stacking_LearningCurves.py")
+os.system("python stackingClassifier.py") # Maybe add -W ignore here as sometimes warnings are printed due to non-convergence but doesn't seem to impact results
