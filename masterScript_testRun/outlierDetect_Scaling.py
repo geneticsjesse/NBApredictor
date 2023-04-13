@@ -10,9 +10,6 @@
 # Import relevant librariess
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import argparse
-import sys
 import os
 import re
 from sklearn import preprocessing
@@ -22,7 +19,7 @@ directory = './training_test_splits/'
 
 # Get a list of all the CSV files in the directory
 files = [os.path.join(directory, file) for file in os.listdir(directory) if file.startswith('training')]
-# print(csv_files)
+
 
 for filename in files:
 # load the dataset
@@ -33,26 +30,23 @@ for filename in files:
 
     # loop through the selected columns
     for col in cols_to_analyze:
-        #print(f"Column {col}:")
+
         data = df[col].values
 
         # calculate the inter-quartile range
         q25, q75 = np.percentile(data, 25), np.percentile(data, 75)
         iqr = q75 - q25
-        #print('Percentiles: 25th=%.3f, 75th=%.3f, IQR=%.3f' % (q25, q75, iqr))
-
+       
         # calculate the outlier cutoff: k=2.5
         cut_off = iqr * 2.5
         lower, upper = q25 - cut_off, q75 + cut_off
 
         # identify outliers
         data_outliers = [x for x in data if x < lower or x > upper]
-        #print('Number of identified outliers: %d' % len(data_outliers))
        
 
         # remove outliers
         data_outliers_removed = [x for x in data if x >= lower and x <= upper]
-        #print('Number of non-outlier observations: %d' % len(data_outliers_removed))
         
         df[col] = pd.Series(data_outliers_removed).reset_index(drop=True)
 
@@ -102,18 +96,14 @@ for filename in files:
 # Testing set
 # Set our x and y variables
 
-test_set = pd.read_csv('testing2022.csv')
-
+test_set = pd.read_csv('./training_test_splits/testing2022.csv')
+# Scale the data using the same scaler as was used on the training data, to avoid data leakage
 X_test=test_set.values[:,12:]
 Y_test=test_set.values[:,7].astype(int)
 test_scaled = scaler.transform(X_test)
 
-
-
-
 # Create a new DataFrame with the scaled values and the original column names
 scaled_df_test = pd.DataFrame(test_scaled, columns=X_colnames)
-print(scaled_df_test)
 
 df_extra_test = test_set[['team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd']]
 # Concatenate our scaled_df with df_extra, which has our extra (categorical) data

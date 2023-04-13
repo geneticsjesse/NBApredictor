@@ -56,8 +56,6 @@ for df, ax in zip(df_list, axs.ravel()):
     model = LogisticRegression(solver='lbfgs', max_iter=1000)
     model.fit(X,Y.ravel()) 
     RFE_model = RFE(estimator=model, n_features_to_select=len(X))
-    # rfe = RFE(model, n_features_to_select = 5)
-    # fit = rfe.fit(X,Y)
 
     # Create a data frame of importance and column names
     
@@ -78,7 +76,7 @@ for df, ax in zip(df_list, axs.ravel()):
     elif name == 'df_RFE_common_features':
         ax.set_title('Feature Importance (RFE common features)')
 
-pyplot.savefig(f"featureImportance/feature_Importance_base_RFE.png")
+pyplot.savefig(f"./featureImportance/feature_Importance_base_RFE.png")
 pyplot.show()
 
 
@@ -110,7 +108,7 @@ name =[x for x in globals() if globals()[x] is df_RFE_all_features][0]
 if name == 'df_RFE_all_features':
     axs.set_title("Feature Importance (RFE all features)")
 
-pyplot.savefig(f"featureImportance/feature_Importance_base_RFE_all.png")
+pyplot.savefig(f"./featureImportance/feature_Importance_base_RFE_all.png")
 pyplot.show()
 
 

@@ -10,15 +10,10 @@
 
 # Import relevant libraries
 import pandas as pd
-import numpy as np
 import os
 import re
-from statsmodels.stats.outliers_influence import variance_inflation_factor
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.feature_selection import RFE
 from sklearn.linear_model import LogisticRegression
-from sklearn import preprocessing
 
 
 directory = './scaled_training_sets/'
@@ -48,8 +43,6 @@ for filename in files:
     cols = list(merged_df.columns[:23])
     temp = pd.Series(rfe.support_,index = cols)
     selected_features_rfe = temp[temp==True].index
-
-    # print("The selected features from RFE are: ", selected_features_rfe)
     
     # Use regex to get only the 'trainingyear1-year2' from the file name
     filename_re = re.search('\/(\w+-\w+)\.', filename)

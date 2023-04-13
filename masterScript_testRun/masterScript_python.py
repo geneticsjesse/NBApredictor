@@ -9,8 +9,10 @@ import os
 #os.system("python3 learningCurves.py")
 #os.system("python3 stackingClassifier_2.py")
 
-os.system("py dataCleaning.py -gamedata gamedata.csv -teamdata combinedTeamData.csv") 
-os.system("py trainTestSplit.py -in merged_df.csv")
-os.system("py outlierDetect_Scaling.py")
-os.system("py RFE_multicol.py")
-os.system("py learningCurves.py")
+os.system("python dataCleaning.py -gamedata gamedata.csv -teamdata combinedTeamData.csv") 
+os.system("python trainTestSplit.py -in merged_df.csv")
+os.system("python outlierDetect_Scaling.py")
+os.system("python RFE_multicol.py")
+# Add feature importance
+#os.system("python learningCurves.py")
+os.system("python stackingClassifier_2.py")

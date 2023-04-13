@@ -8,11 +8,6 @@
 # ========================================================================= #
 
 import pandas as pd
-from sklearn.model_selection import TimeSeriesSplit
-from sklearn.metrics import mean_squared_error
-import numpy as np
-import statsmodels.api as sm
-from statsmodels.tsa.arima.model import ARIMA
 import pandas as pd
 import argparse
 import sys
@@ -47,7 +42,6 @@ for i in range(2, len(seasons), 1):
     
     # Write each training split to csv file
     for list in train_set_list:
-        #print(list)
         list.to_csv(f"./training_test_splits/training2015-{season-1}.csv", index=False)
     
 test.to_csv(f"./training_test_splits/testing2022.csv", index=False)
