@@ -55,7 +55,7 @@ def read_test():
 # separate input and output variables
     varray  = df_slice.values
     nc      = len(varray[0,:])-1
-    X       = varray[:,0:nc] #0-18 typically
+    X       = varray[:,0:nc]
     Y       = varray[:,nc]
     return X, Y
 
@@ -100,7 +100,7 @@ for name, model in models:
 	names.append(name)
 	print('>%s: %f (%f)' % (name, cv_results.mean(), cv_results.std()))
 
-fig1,ax1 = plt.subplots()
+fig1,ax1 = plt.subplots(figsize = (10, 7))
 plot1=ax1.boxplot(results, labels=names, showmeans=True)
 ax1.set_title('Algorithm Comparison - before optimization')
 fig1.savefig(f"./hyperparameterOptimization/modelComparison_beforeOptimization.png")
@@ -184,8 +184,8 @@ for name, model in optimized_models:
 	print('%s: %f (%f)' % (name, cv_results.mean(), cv_results.std()))
 
 # compare optimized models based on training results
-fig2,ax2 = plt.subplots()
-fig2=ax2.boxplot(results, labels=names, showmeans=True)
+fig2,ax2 = plt.subplots(figsize = (10, 7))
+plot2=ax2.boxplot(results, labels=names, showmeans=True)
 ax2.set_title('Algorithm Comparison - after optimization')
 fig2.savefig(f"./hyperparameterOptimization/modelComparison_afterOptimization.png")
 plt.close(fig2)
