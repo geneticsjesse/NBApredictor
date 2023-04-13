@@ -66,11 +66,11 @@ print('\nClass distribution:\n', merged_df.groupby('team_abbreviation_home').siz
 
 # box and whisker plots
 merged_df.iloc[:, 12:].plot(kind='box', subplots=True, layout=(4,6), sharex=False, sharey=False)
-plt.show()
+# plt.show()
 
 # histograms
 merged_df.iloc[:, 12:].hist()
-plt.show()
+# plt.show()
 
 # Pie chart of wl_home
 wl_home_count_list = merged_df["wl_home"].value_counts().tolist()
@@ -86,8 +86,8 @@ plt.pie(wl_home_count_list,
                       'linewidth': 1,
                       'antialiased': True})
 plt.title("Win/Loss Home Distribution")
-#plt.savefig(f"wl_home_piechart.png")
-plt.show()
+plt.savefig(f"wl_home_piechart.png")
+# plt.show()
 
 # The pie chart produced above shows us the home team wins ~57% of the time, meaning we will need to stratify our data when performing cross validation, to avoid an imbalanced training/testing split.
 
@@ -98,4 +98,4 @@ merged_df['wl_home'] = merged_df['wl_home'].map({'W': 1, 'L': 0})
 print("There are", merged_df.isnull().sum().sum(), "missing values in the merged dataset.") 
 
 # Writing to csv
-#merged_df.to_csv('merged_df.csv', index=False)
+merged_df.to_csv('merged_df.csv', index=False)

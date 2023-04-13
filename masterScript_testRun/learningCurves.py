@@ -20,9 +20,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, StackingClassifier
 
 # load the dataset; header is first row
-df_base = pd.read_csv('./scaled_training_sets/training2015-2021.csv_outliers_removed_scaled.csv', header=0)
+df_base = pd.read_csv('./scaled_training_sets/training2015-2021_outliers_removed_scaled.csv', header=0)
 df_rfe = pd.read_csv('./RFE_splits/train2015_2021_RFEcommon.csv', header=0)
-df_rfe_all = pd.read_csv('./RFE_splits/RFE_training2015-2021_outliers_removed_scaled', header=0)
+df_rfe_all = pd.read_csv('./RFE_splits/RFE_training2015-2021_outliers_removed_scaled.csv', header=0)
 
 def get_stacking():
  level0 = list()
@@ -82,12 +82,14 @@ for df in df_list:
         
 
     name =[x for x in globals() if globals()[x] is df][0]
-    # if name == df_base:
-    #     plt.suptitle("Learning Curves (Baseline)")
-    # elif name == df_rfe:
-    #     plt.suptitle("Learning Curves (RFE 9 Common Features)")
-    # elif name == df_rfe_all:
-    #     plt.suptitle("Learning Curves (RFE 2015-2021)")
+    
+    # if df_list.index(df) == 0:
+    #     ax[0,0].set_title(f"Learning Curves (Baseline)")
+    # elif df_list.index(df) == 1:
+    #     ax[0,0].set_title(f"Learning Curves (RFE 9 Common Features)")
+    # elif df_list.index(df) == 2:
+    #     ax[0,0].set_title(f"Learning Curves (RFE 2015-2021)")
+    
 
     plt.subplots_adjust(left=0.1,
                         bottom=0.1,
@@ -99,9 +101,9 @@ for df in df_list:
     plt.savefig(f'learningCurves/{name}_LearningCurves.png')    
     plt.show()
 
-    fig, ax = plt.subplots(1,1, figsize = (10, 7))
-    LearningCurveDisplay.from_estimator(stacking, **common_params, ax=ax, scoring="matthews_corrcoef")
-    ax.legend(["Training Score", "Test Score"])
-    ax.set_title(f"Learning Curve for Stacking Classifier")
-    plt.savefig(f'{name}_StackingClassifer_LearningCurves.png')
-    plt.show()
+    # fig, ax = plt.subplots(1,1, figsize = (10, 7))
+    # LearningCurveDisplay.from_estimator(stacking, **common_params, ax=ax, scoring="matthews_corrcoef")
+    # ax.legend(["Training Score", "Test Score"])
+    # ax.set_title(f"Learning Curve for Stacking Classifier")
+    # plt.savefig(f'learningCurves/{name}_StackingClassifer_LearningCurves.png')
+    # plt.show()

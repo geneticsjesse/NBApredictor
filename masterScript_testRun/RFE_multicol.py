@@ -107,7 +107,7 @@ else:
 
 # Read in train and test sets to create our RFE-common datasets
 train2015_2021 = pd.read_csv('./RFE_splits/RFE_training2015-2021_outliers_removed_scaled.csv')
-test = pd.read_csv('test_set_outliers_removed_scaled.csv') 
+test = pd.read_csv('./scaled_training_sets/test_set_outliers_removed_scaled.csv') 
 
 train2015_2021 = train2015_2021.loc[:, common_columns]
 test = test.loc[:, common_columns]
