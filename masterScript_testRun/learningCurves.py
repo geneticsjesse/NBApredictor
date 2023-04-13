@@ -24,20 +24,20 @@ df_base = pd.read_csv('./scaled_training_sets/training2015-2021_outliers_removed
 df_rfe = pd.read_csv('./RFE_splits/train2015_2021_RFEcommon.csv', header=0)
 df_rfe_all = pd.read_csv('./RFE_splits/RFE_training2015-2021_outliers_removed_scaled.csv', header=0)
 
-def get_stacking():
- level0 = list()
- level0.append(('lr', LogisticRegression(max_iter=1000000, random_state=2)))
- level0.append(('knn', KNeighborsClassifier()))
- level0.append(('rf', RandomForestClassifier (random_state=2)))
- level0.append(('svm', SVC(gamma='auto', random_state=2)))
- level0.append(('NB', GaussianNB()))
- level0.append(('mlp', MLPClassifier(random_state=2)))
+# def get_stacking():
+#  level0 = list()
+#  level0.append(('lr', LogisticRegression(max_iter=1000000, random_state=2)))
+#  level0.append(('knn', KNeighborsClassifier()))
+#  level0.append(('rf', RandomForestClassifier (random_state=2)))
+#  level0.append(('svm', SVC(gamma='auto', random_state=2)))
+#  level0.append(('NB', GaussianNB()))
+#  level0.append(('mlp', MLPClassifier(random_state=2)))
  
- # define meta learner model
- level1 = LogisticRegression()
- # define the stacking ensemble
- model = StackingClassifier(estimators=level0, final_estimator=level1, cv=5)
- return model
+#  # define meta learner model
+#  level1 = LogisticRegression()
+#  # define the stacking ensemble
+#  model = StackingClassifier(estimators=level0, final_estimator=level1, cv=5)
+#  return model
 
 df_list = [df_base, df_rfe, df_rfe_all]
 
@@ -56,7 +56,7 @@ for df in df_list:
     linear = LogisticRegression(max_iter=100000)
     rf = RandomForestClassifier(n_estimators=100, random_state=0)
     ann =  MLPClassifier(hidden_layer_sizes=(8,8,8), activation='relu', solver='adam', max_iter=500)
-    stacking = get_stacking()
+    #stacking = get_stacking()
 
     model_list = [gnb, knn, ann, linear, rf, svc]
 
