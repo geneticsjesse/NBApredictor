@@ -16,4 +16,4 @@ os.system("python RFE_multicol.py")
 os.system("python featureImportance.py -base ./scaled_training_sets/training2015-2021_outliers_removed_scaled.csv -rfe ./RFE_splits/RFE_training2015-2021_outliers_removed_scaled.csv -rfe9 ./RFE_splits/train2015_2021_RFEcommon.csv")
 os.system("python learningCurves.py")
 os.system("python stacking_LearningCurves.py")
-os.system("python stackingClassifier.py") # Maybe add -W ignore here as sometimes warnings are printed due to non-convergence but doesn't seem to impact results
+os.system("python -W ignore stackingClassifier.py")
