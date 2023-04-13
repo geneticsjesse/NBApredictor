@@ -93,10 +93,10 @@ for key in list(data_frames.keys())[1:]:
     common_columns = current_common_columns
 
 # Print the common column names, or a message if there are no common column names
-if len(common_columns) > 0:
-    print(f"Common column names: {common_columns}")
-else:
-    print("No common column names")
+# if len(common_columns) > 0:
+#     print(f"Common column names: {common_columns}")
+# else:
+#     print("No common column names")
 
 # Read in train and test sets to create our RFE-common datasets
 train2015_2021 = pd.read_csv('./RFE_splits/RFE_training2015-2021_outliers_removed_scaled.csv')
