@@ -7,9 +7,10 @@
 # Date:     March 26, 2023
 #
 # How to run:   python3 
+# This script generates learning curves for our stacking classifier
 # ========================================================================= #
 
-
+# Import relevant libraries
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.model_selection import LearningCurveDisplay, RepeatedStratifiedKFold
@@ -42,7 +43,7 @@ def get_stacking():
  model = StackingClassifier(estimators=level0, final_estimator=level1, cv=5)
  return model
 
-# Create a list of our three dataframes
+# Create a list of our three dataframes to iterate over
 df_list = [df_base, df_rfe_common, df_rfe_all]
 
 for df in df_list:
@@ -53,10 +54,12 @@ for df in df_list:
     nc      = len(varray[0,:])-1
     X       = varray[:,0:nc]
     y       = varray[:,nc]
+     # Generate our stacking model
     stacking = get_stacking()
 
+    # Setting up our learning curve plot
     fig, ax = plt.subplots(1,1, figsize=(10, 7), squeeze=False)
-
+    # Create a dictionary of common parameters for LearningCurveDisplay
     common_params = {
         "X": X,
         "y": y,
@@ -68,10 +71,11 @@ for df in df_list:
         "std_display_style": "fill_between",
         "score_name": "MCC",
     }
+    # Generate our learning curve plot
     fig, ax = plt.subplots(1,1, figsize = (10, 7))
     LearningCurveDisplay.from_estimator(stacking, **common_params, ax=ax, scoring="matthews_corrcoef")
     ax.legend(["Training Score", "Test Score"])
     ax.set_title(f"Learning Curve for Stacking Classifier")
-        
+    # Get a list of dataframe names in the global environment    
     name =[x for x in globals() if globals()[x] is df][0]
     plt.savefig(f'learningCurves/{name}_StackingClassifer_LearningCurves.png')

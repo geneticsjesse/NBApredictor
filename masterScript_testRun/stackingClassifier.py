@@ -7,8 +7,10 @@
 # Date:     April 4 2023
 
 # How to run:   python3  stackingClassifier_2.py  --in_trainfile train2015_2021_RFEcommon --in_testfile test_RFEcommon.csv
+# This script runs our 7 models on training data, optimizes hyperparameters, and ultimately runs the models on testing data to evaluate model performance.
 # ================= #
 
+# Import relevant libraries
 import matplotlib.pyplot as plt 
 from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score
 from sklearn.ensemble import RandomForestClassifier
@@ -65,7 +67,7 @@ X_test, y_test = read_test()
 # get a stacking ensemble of models
 def get_stacking():
  level0 = list()
- level0.append(('lr', LogisticRegression(max_iter=1000000, random_state=2)))
+ level0.append(('lr', LogisticRegression(max_iter=10000000, random_state=2)))
  level0.append(('knn', KNeighborsClassifier()))
  level0.append(('rf', RandomForestClassifier (random_state=2)))
  level0.append(('svm', SVC(gamma='auto', random_state=2)))
@@ -159,7 +161,7 @@ optimized_models.append(('rf', RandomForestClassifier(n_estimators=best_params['
 optimized_models.append(('knn', KNeighborsClassifier(n_neighbors=best_params['knn']['n_neighbors'])))
 optimized_models.append(('nb', GaussianNB(var_smoothing=best_params['nb']['var_smoothing'])))
 optimized_models.append(('svm', SVC(gamma='auto',C=best_params['svm']['C'], kernel=best_params['svm']['kernel'], class_weight=best_params['svm']['class_weight'], degree=best_params['svm']['degree'], random_state=2)))
-optimized_models.append(('mlp', MLPClassifier (activation=best_params['mlp']['activation'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], solver = best_params['mlp']['solver'], alpha = best_params['mlp']['alpha'], learning_rate=best_params['mlp']['learning_rate'], max_iter=10000, random_state=2)))
+optimized_models.append(('mlp', MLPClassifier (activation=best_params['mlp']['activation'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], solver = best_params['mlp']['solver'], alpha = best_params['mlp']['alpha'], learning_rate=best_params['mlp']['learning_rate'], max_iter=100000, random_state=2)))
 
 # create a list of tuples containing the optimized models and their names to use for appending our stacking classifier to the optimized models list
 optimized_models_forStacking = [('lr', LogisticRegression(C=best_params['lr']['C'], class_weight=best_params['lr']['class_weight'], max_iter=best_params['lr']['max_iter'], multi_class='ovr', random_state=2, solver=best_params['lr']['solver'])),
@@ -194,7 +196,7 @@ plt.close(fig2)
 # fit and save optimized models
 for name, model in optimized_models:
 	model.fit(X_train, y_train)
-	filename = name + '_optimized_model.sav'
+	filename = (f'./optimizedModels/{name}_optimized_model.sav')
 	joblib.dump(model, filename)
 
 # testing

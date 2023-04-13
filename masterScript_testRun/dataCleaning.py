@@ -5,6 +5,7 @@
 # Date:     March 15, 2023
 
 # How to run:   python3  dataCleaning.py  -gamedata gamedata.csv -teamdata combinedTeamData.csv
+# This script takes in raw game and team data, cleans, and merges them into a single dataframe. It also performs some initial data exploration and generates plots.
 # ================= #
 
 # Import relevant libraries
@@ -45,8 +46,7 @@ teamdat_cleaned = teamdat[['Team', 'FG.', 'X3P.', 'X2P.', 'FT.', 'DRB', 'ORB', '
 # Left merging dataframes to create a master data frame
 merged_df = pd.merge(gamedat_cleaned, teamdat_cleaned, on=['game_yearEnd', 'Team'], how='left')
 
-# summarize data #
-# -------------- #
+# summarize data
 print('Data summarization')
 print('------------------')
 # shape
@@ -61,8 +61,7 @@ print('\nSummary stats of data:\n', merged_df.describe())
 # class distribution
 print('\nClass distribution:\n', merged_df.groupby('team_abbreviation_home').size())
 
-# explore data visually #
-# --------------------- #
+# explore data visually
 
 # Pie chart of wl_home
 wl_home_count_list = merged_df["wl_home"].value_counts().tolist()

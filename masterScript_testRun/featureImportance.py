@@ -3,14 +3,14 @@
 # Date:     March 18, 2023
 
 # How to run: python3 .\featureImportance.py -base .\scaled_training_sets\training2015-2021_outliers_removed_scaled.csv -rfe .\RFE_splits1\RFE_training2015-2021_outliers_removed_scaled.csv -rfe9 .\RFE_splits\train2015_2021_RFEcommon.csv
+
+# This script takes our baseline data (2015-2021 with no RFE performed), our RFE-selected data for 2015-2021, and our common RFE data (2015-2021 with only the 9 features that RFE identified as common between all training splits.)
 # ================= #
 
-#from sklearn.feature_selection import RFE
+# Import relevant libraries
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_selection import RFE
-from sklearn import preprocessing
 from matplotlib import pyplot
-import matplotlib.gridspec as gridspec
 import pandas as pd
 import argparse
 import sys
@@ -58,7 +58,6 @@ for df, ax in zip(df_list, axs.ravel()):
     RFE_model = RFE(estimator=model, n_features_to_select=len(X))
 
     # Create a data frame of importance and column names
-    
     importances = pd.DataFrame(data={
     'Attribute': df.columns[0:],
     'Importance': model.coef_[0]

@@ -1,10 +1,11 @@
 # ===================== #
-# Identify outliers using the IQR method #
+# Identify outliers using the IQR method and scale our input features #
 # ===================== #
 # Author:   Jesse Wolf, jwolf@uoguelph.ca | Thomas Papp-Simon, tpappsim@uoguelph.ca
 # Date:     March 15, 2023
 
-# How to run:   python3  outlierDetection.py  -in df.csv
+# How to run:   python3  outlierDetect_Scaling.py
+# This script reads in all training and test datasets, identifies and removes outliers, and scales the input features
 # ================= #
 
 # Import relevant librariess
@@ -15,6 +16,7 @@ import re
 from sklearn import preprocessing
 from pandas.api.types import is_numeric_dtype
 
+# Set the directory where the training and test data are located
 directory = './training_test_splits/'
 
 # Get a list of all the CSV files in the directory

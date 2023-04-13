@@ -1,11 +1,11 @@
 # ===================== #
-# Compute Variance Inflation Factors to check for multicollinearity #
+# Compute Recursive Feature Elimination
 # ===================== #
 # Author:   Jesse Wolf, jwolf@uoguelph.ca | Thomas Papp-Simon, tpappsim@uoguelph.ca
 # Date:     March 18, 2023
 
 # How to run:   python3  RFE_multicol.py 
-# Loops through training splits to generate a csv file for each split, containing only the features RFE selects.
+# This script loops through training splits to generate a csv file for each split, containing only the features RFE selects.
 # ================= #
 
 # Import relevant libraries
@@ -15,7 +15,7 @@ import re
 from sklearn.feature_selection import RFE
 from sklearn.linear_model import LogisticRegression
 
-
+# Set the directory where the scaled data are located
 directory = './scaled_training_sets/'
 
 # Get a list of all the CSV files in the directory
@@ -28,10 +28,8 @@ for filename in files:
 
     df_extra = merged_df[['team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd', 'wl_home']]
 
-   
     X=merged_df.values[:,:23]
     Y=merged_df.values[:,27].astype(int)
-
 
     # Feature selection
     model = LogisticRegression(solver='lbfgs', max_iter=1000)
@@ -48,8 +46,6 @@ for filename in files:
     filename_re = re.search('\/(\w+-\w+)\.', filename)
     if filename_re:
         new_filename = filename_re.group(1)
-
-    # df_rfe_corrmatrix = pd.concat([merged_df[selected_features_rfe].reset_index(drop=True)], axis=1)
 
     df_rfe_clean = pd.concat([merged_df[selected_features_rfe].reset_index(drop=True), df_extra], axis=1)
     df_rfe_clean.to_csv (f'./RFE_splits/RFE_{new_filename}.csv', index = False)
@@ -71,8 +67,6 @@ for file_name in os.listdir(directory):
         data_frames[file_name] = df
         # Store the column names in a list for each data frame
         column_names = list(df.columns)
-        # Print the column names for this data frame
-       # print(f"Column names for {file_name}: {column_names} \n")
 
 #This code creates a set of the column names for the first data frame in the dictionary, then loops over all the other data frames and updates the set of common column names with the intersection of the current data frame's columns and the existing set. Finally, it prints the resulting set of common column names.
 
