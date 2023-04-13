@@ -101,9 +101,11 @@ for name, model in models:
 	names.append(name)
 	print('>%s: %f (%f)' % (name, cv_results.mean(), cv_results.std()))
 
-plt.boxplot(results, labels=names, showmeans=True)
-plt.title('Algorithm Comparison - before optimization')
-plt.savefig(f"./hyperparameterOptimization/modelComparison_beforeOptimization.png")
+fig1,ax1 = plt.subplots()
+plot1=ax1.boxplot(results, labels=names, showmeans=True)
+ax1.set_title('Algorithm Comparison - before optimization')
+fig1.savefig(f"./hyperparameterOptimization/modelComparison_beforeOptimization.png")
+plt.close(fig1)
 #plt.show()
 
 #improve accuracy with hyper-parameter tuning
@@ -183,9 +185,11 @@ for name, model in optimized_models:
 	print('%s: %f (%f)' % (name, cv_results.mean(), cv_results.std()))
 
 # compare optimized models based on training results
-plt.boxplot(results, labels=names, showmeans=True)
-plt.title('Algorithm Comparison - after optimization')
-plt.savefig(f"./hyperparameterOptimization/modelComparison_afterOptimization.png")
+fig2,ax2 = plt.subplots()
+fig2=ax2.boxplot(results, labels=names, showmeans=True)
+ax2.set_title('Algorithm Comparison - after optimization')
+fig2.savefig(f"./hyperparameterOptimization/modelComparison_afterOptimization.png")
+plt.close(fig2)
 #plt.show()
 
 # fit and save optimized models

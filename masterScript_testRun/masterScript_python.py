@@ -14,5 +14,5 @@ os.system("python trainTestSplit.py -in merged_df.csv")
 os.system("python outlierDetect_Scaling.py")
 os.system("python RFE_multicol.py")
 # Add feature importance
-#os.system("python learningCurves.py")
+os.system("python learningCurves.py")
 os.system("python stackingClassifier_2.py")
