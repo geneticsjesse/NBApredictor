@@ -2,7 +2,7 @@
 # Author:   Jesse Wolf, jwolf@uoguelph.ca | Thomas Papp-Simon, tpappsim@uoguelph.ca
 # Date:     March 18, 2023
 
-# How to run: python3 .\featureImportance.py -base .\scaled_training_sets\training2015-2021_outliers_removed_scaled.csv -rfe .\RFE_splits1\RFE_training2015-2021_outliers_removed_scaled.csv -rfe9 .\RFE_splits\train2015_2021_RFEcommon.csv
+# How to run: python3 .\featureImportance.py -base .\scaled_training_sets\training2015-2021_outliers_removed_scaled.csv -rfe .\RFE_splits\RFE_training2015-2021_outliers_removed_scaled.csv -rfe9 .\RFE_splits\train2015_2021_RFEcommon.csv
 
 # This script takes our baseline data (2015-2021 with no RFE performed), our RFE-selected data for 2015-2021, and our common RFE data (2015-2021 with only the 9 features that RFE identified as common between all training splits.)
 # ================= #
@@ -74,7 +74,7 @@ for df, ax in zip(df_list, axs.ravel()):
         ax.set_title('Feature Importance (baseline)')
     elif name == 'df_RFE_common_features':
         ax.set_title('Feature Importance (RFE common features)')
-
+pyplot.tight_layout()
 pyplot.savefig(f"./featureImportance/feature_Importance_base_RFE.png")
 
 
@@ -105,5 +105,5 @@ axs.tick_params(axis='x', labelrotation=90)
 name =[x for x in globals() if globals()[x] is df_RFE_all_features][0]
 if name == 'df_RFE_all_features':
     axs.set_title("Feature Importance (RFE all features)")
-
+pyplot.tight_layout()
 pyplot.savefig(f"./featureImportance/feature_Importance_base_RFE_all.png")
