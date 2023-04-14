@@ -16,7 +16,7 @@ from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import matthews_corrcoef
+from sklearn.metrics import matthews_corrcoef, f1_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
@@ -97,7 +97,7 @@ results = []
 names = []
 for name, model in models:
 	kfold = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-	cv_results = cross_val_score(model, X_train, y_train, cv=kfold, scoring='matthews_corrcoef')
+	cv_results = cross_val_score(model, X_train, y_train, cv=kfold, scoring='f1')
 	results.append(cv_results)
 	names.append(name)
 	print('>%s: %f (%f)' % (name, cv_results.mean(), cv_results.std()))
@@ -105,8 +105,8 @@ for name, model in models:
 fig1,ax1 = plt.subplots(figsize = (10, 7))
 plot1=ax1.boxplot(results, labels=names, showmeans=True)
 ax1.set_title('Algorithm Comparison - before optimization')
-ax1.set_ylabel('Matthews Correlation Coefficient')
-fig1.savefig(f"./hyperparameterOptimization/modelComparison_beforeOptimization.png")
+ax1.set_ylabel('F1 Score')
+fig1.savefig(f"./hyperparameterOptimization/modelComparison_beforeOptimization_f1.png")
 plt.close(fig1)
 #plt.show()
 
@@ -150,7 +150,7 @@ model_params['stacking']['final_estimator'] = [LogisticRegression(max_iter=10000
 best_params = dict()
 for name, model in models:
     cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-    rand_search = RandomizedSearchCV(estimator=model, param_distributions=model_params[name], n_iter=5, n_jobs=-1, cv=cv, scoring='matthews_corrcoef')
+    rand_search = RandomizedSearchCV(estimator=model, param_distributions=model_params[name], n_iter=5, n_jobs=-1, cv=cv, scoring='f1')
     rand_result = rand_search.fit(X_train, y_train)
     print("Model %s -- Best: %f using %s" % (name, rand_result.best_score_, rand_result.best_params_))
     best_params[name] = rand_result.best_params_
@@ -181,7 +181,7 @@ results = []
 names = []
 for name, model in optimized_models:
 	kfold = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-	cv_results = cross_val_score(model, X_train, y_train, cv=kfold, scoring='matthews_corrcoef')
+	cv_results = cross_val_score(model, X_train, y_train, cv=kfold, scoring='f1')
 	results.append(cv_results)
 	names.append(name)
 	print('%s: %f (%f)' % (name, cv_results.mean(), cv_results.std()))
@@ -190,8 +190,8 @@ for name, model in optimized_models:
 fig2,ax2 = plt.subplots(figsize = (10, 7))
 plot2=ax2.boxplot(results, labels=names, showmeans=True)
 ax2.set_title('Algorithm Comparison - after optimization')
-ax2.set_ylabel('Matthews Correlation Coefficient')
-fig2.savefig(f"./hyperparameterOptimization/modelComparison_afterOptimization.png")
+ax2.set_ylabel('F1 Score')
+fig2.savefig(f"./hyperparameterOptimization/modelComparison_afterOptimization_f1.png")
 plt.close(fig2)
 #plt.show()
 
@@ -207,12 +207,12 @@ print('-------------')
 for name, model in optimized_models:
     model.fit(X_train, y_train)
     predicted_results = model.predict(X_test)
-    acc_result = matthews_corrcoef(predicted_results,y_test)
-    print('%s Matthews Correlation Coefficient: %f' % (name, acc_result))
+    acc_result = f1_score(predicted_results,y_test)
+    print('%s F1 score: %f' % (name, acc_result))
     cm = confusion_matrix(predicted_results,y_test)
     disp = ConfusionMatrixDisplay(confusion_matrix=cm)
     disp.plot()
     plt.title('Confusion matrix corresp. to test results for ' + name)
     plt.xlabel('Ground truth')
     plt.ylabel('Predicted results')
-    plt.savefig(f'confusionMatrices/{name}_ConfusionMatrix.png')
+    plt.savefig(f'confusionMatrices/{name}_ConfusionMatrix_f1.png')
