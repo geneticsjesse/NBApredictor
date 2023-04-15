@@ -55,12 +55,12 @@ RFE_training = pd.read_csv(f"./RFE_splits/RFE_training2015-2021_outliers_removed
 scaled_test_set = pd.read_csv(f"./scaled_training_sets/test_set_outliers_removed_scaled.csv")
 
 scaled_test_set = scaled_test_set.drop([col for col in scaled_test_set.columns if col not in scaled_test_set.columns and col not in RFE_training.columns], axis=1)
-scaled_test_set.to_csv(f'./RFE_splits/testing_RFE_all.csv')
+scaled_test_set.to_csv(f'./RFE_splits/test_RFE_all.csv')
 
 
 
 
-#This code should loop over all files in the scaled_training_sets directory and only process the ones with the .csv file extension and ending with RFE.csv. It then loads each data frame from the CSV file and stores it in a dictionary using the file name as the key. Finally, it creates a list of column names for each data frame and prints them to the console.
+# This code should loop over all files in the scaled_training_sets directory and only process the ones with the .csv file extension and ending with RFE.csv. It then loads each data frame from the CSV file and stores it in a dictionary using the file name as the key. Finally, it creates a list of column names for each data frame and prints them to the console.
 directory = "RFE_splits"
 file_extension = "RFE"
 
