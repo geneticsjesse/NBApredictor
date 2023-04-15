@@ -75,7 +75,7 @@ print(common_cols)
         
 
 #This code creates a set of the column names for the first data frame in the dictionary, then loops over all the other data frames and updates the set of common column names with the intersection of the current data frame's columns and the existing set. Finally, it prints the resulting set of common column names.
-
+#
 # Create a list of the column names for the first data frame in the dictionary
 # common_columns = list(data_frames[list(data_frames.keys())[0]].columns)
 
