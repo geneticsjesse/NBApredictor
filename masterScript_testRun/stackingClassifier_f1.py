@@ -162,7 +162,7 @@ optimized_models.append(('rf', RandomForestClassifier(n_estimators=best_params['
 optimized_models.append(('knn', KNeighborsClassifier(n_neighbors=best_params['knn']['n_neighbors'])))
 optimized_models.append(('nb', GaussianNB(var_smoothing=best_params['nb']['var_smoothing'])))
 optimized_models.append(('svm', SVC(gamma='auto',C=best_params['svm']['C'], kernel=best_params['svm']['kernel'], class_weight=best_params['svm']['class_weight'], degree=best_params['svm']['degree'], random_state=2)))
-optimized_models.append(('mlp', MLPClassifier (activation=best_params['mlp']['activation'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], solver = best_params['mlp']['solver'], alpha = best_params['mlp']['alpha'], learning_rate=best_params['mlp']['learning_rate'], max_iter=100000, random_state=2)))
+optimized_models.append(('mlp', MLPClassifier (activation=best_params['mlp']['activation'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], solver = best_params['mlp']['solver'], alpha = best_params['mlp']['alpha'], learning_rate=best_params['mlp']['learning_rate'], learning_rate_init = 1e-05,max_iter=100000, random_state=2)))
 
 # create a list of tuples containing the optimized models and their names to use for appending our stacking classifier to the optimized models list
 optimized_models_forStacking = [('lr', LogisticRegression(C=best_params['lr']['C'], class_weight=best_params['lr']['class_weight'], max_iter=best_params['lr']['max_iter'], multi_class='ovr', random_state=2, solver=best_params['lr']['solver'])),
@@ -170,7 +170,7 @@ optimized_models_forStacking = [('lr', LogisticRegression(C=best_params['lr']['C
     ('knn', KNeighborsClassifier(n_neighbors=best_params['knn']['n_neighbors'])),
     ('nb', GaussianNB(var_smoothing=best_params['nb']['var_smoothing'])),
     ('svm', SVC(C=best_params['svm']['C'], class_weight=best_params['svm']['class_weight'], degree=best_params['svm']['degree'], gamma='auto', kernel=best_params['svm']['kernel'], random_state=2)),
-    ('mlp', MLPClassifier(activation=best_params['mlp']['activation'], alpha=best_params['mlp']['alpha'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], learning_rate=best_params['mlp']['learning_rate'], max_iter=10000, random_state=2, solver=best_params['mlp']['solver']))
+    ('mlp', MLPClassifier(activation=best_params['mlp']['activation'], alpha=best_params['mlp']['alpha'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], learning_rate=best_params['mlp']['learning_rate'], max_iter=10000, learning_rate_init = 1e-05,random_state=2, solver=best_params['mlp']['solver']))
 ]
 # Need to append stacking to optimized models
 optimized_models.append(('stacking', StackingClassifier(estimators= optimized_models_forStacking, cv = best_params['stacking']['cv'], final_estimator=best_params['stacking']['final_estimator'])))
@@ -196,10 +196,10 @@ plt.close(fig2)
 #plt.show()
 
 # fit and save optimized models
-for name, model in optimized_models:
-	model.fit(X_train, y_train)
-	filename = (f'./optimizedModels/{name}_optimized_model.sav')
-	joblib.dump(model, filename)
+# for name, model in optimized_models:
+# 	model.fit(X_train, y_train)
+# 	filename = (f'./optimizedModels/{name}_optimized_model.sav')
+# 	joblib.dump(model, filename)
 
 # testing
 print('\nModel testing')
