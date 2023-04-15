@@ -77,16 +77,13 @@ plt.pie(wl_home_count_list,
                       'linewidth': 1,
                       'antialiased': True})
 plt.title("Win/Loss Home Distribution")
+plt.tight_layout()
 plt.savefig(f"./dataExplorationPlots/wl_home_piechart.png")
 # plt.show()
 
-# box and whisker plots
-merged_df.iloc[:, 12:].plot(kind='box', subplots=True, layout=(4,6), sharex=False, sharey=False)
-# plt.show()
-plt.savefig(f"./dataExplorationPlots/featuresBoxAndWhisker.png")
-
 # histograms
 merged_df.iloc[:, 12:].hist()
+plt.tight_layout()
 # plt.show()
 plt.savefig(f"./dataExplorationPlots/featuresHistogram.png")
 
