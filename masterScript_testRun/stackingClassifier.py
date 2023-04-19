@@ -39,7 +39,7 @@ def read_train():
 # separate input and output variables
     varray  = df_slice.values
     nc      = len(varray[0,:])-1
-    X       = varray[:,0:nc]
+    X       = varray[:,0:nc] #0-18 typically
     Y       = varray[:,nc]
     return X, Y
 
