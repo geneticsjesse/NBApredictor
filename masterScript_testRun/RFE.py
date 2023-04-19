@@ -54,8 +54,8 @@ for filename in files:
 RFE_training = pd.read_csv(f"./RFE_splits/RFE_training2015-2021_outliers_removed_scaled.csv")
 scaled_test_set = pd.read_csv(f"./scaled_training_sets/test_set_outliers_removed_scaled.csv")
 
-scaled_test_set = scaled_test_set.drop([col for col in scaled_test_set.columns if col not in scaled_test_set.columns and col not in RFE_training.columns], axis=1)
-scaled_test_set.to_csv(f'./RFE_splits/test_RFE_all.csv')
+scaled_test_set1 = scaled_test_set.drop([col for col in scaled_test_set.columns if col not in RFE_training.columns], axis=1)
+scaled_test_set1.to_csv(f'./RFE_splits/test_RFE_all.csv', index=False)
 
 
 
