@@ -73,6 +73,7 @@ for file_name in os.listdir(directory):
 # Create a list of the columns(features) that are shared among all datasets.
 common_cols = list(set.intersection(*(set(df.columns) for df in frames)))
 
+
 # # Print the common column names, or a message if there are no common column names
 # if len(common_columns) > 0:
 #     print(f"Common column names: {common_columns}")
