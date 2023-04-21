@@ -23,6 +23,7 @@ if not isExist:
    # Create a new directory because it does not exist
    os.makedirs(path)
 
+print ("\nBeginning dataCleaning.py.\n")
 
 # define command line arguments
 parser = argparse.ArgumentParser(description='Data cleaning')
@@ -88,14 +89,14 @@ plt.pie(wl_home_count_list,
                       'antialiased': True})
 plt.title("Win/Loss Home Distribution")
 plt.tight_layout()
-plt.savefig(f"./dataExplorationPlots/wl_home_piechart.png")
+plt.savefig(f"./dataExploration/wl_home_piechart.png")
 # plt.show()
 
 # histograms
 merged_df.iloc[:, 12:].hist()
 plt.tight_layout()
 # plt.show()
-plt.savefig(f"./dataExplorationPlots/featuresHistogram.png")
+plt.savefig(f"./dataExploration/featuresHistogram.png")
 
 # The pie chart produced above shows us the home team wins ~57% of the time, meaning we will need to stratify our data when performing cross validation, to avoid an imbalanced training/testing split.
 
@@ -107,3 +108,5 @@ print("There are", merged_df.isnull().sum().sum(), "missing values in the merged
 
 # Writing to csv
 merged_df.to_csv('merged_df.csv', index=False)
+
+print ("dataCleaning.py has finished running, on to trainTestSplit.py\n")

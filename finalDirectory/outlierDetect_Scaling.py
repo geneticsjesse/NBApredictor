@@ -16,6 +16,8 @@ import re
 from sklearn import preprocessing
 from pandas.api.types import is_numeric_dtype
 
+print ("\nBeginning outlierDetect_Scaling.py.\n")
+
 # Set the directory where the training and test data are located
 directory = './training_test_splits/'
 
@@ -123,3 +125,5 @@ scaled_df_test = pd.concat([scaled_df_test.reset_index(drop=True), df_extra_test
 scaled_df_test['wl_home'] = Y_test
 
 scaled_df_test.to_csv (f'./scaled_training_sets/test_set_outliers_removed_scaled.csv', index = False)
+
+print ("outlierDetect_Scaling.py has finished running, on to RFE.py\n")

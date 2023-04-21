@@ -12,7 +12,7 @@ import pandas as pd
 import argparse
 import sys
 import os
-
+print ("\nBeginning trainTestSplit.py.\n")
 # Make directory if does not exist
 path = "training_test_splits"
 # Check whether the specified path exists or not
@@ -56,10 +56,4 @@ for i in range(2, len(seasons), 1):
     
 test.to_csv(f"./training_test_splits/testing2022.csv", index=False)
 
-
-
-
-
-
-
-
+print ("trainTestSplit.py has finished running, on to outlierDetect_Scaling.py\n")

@@ -29,6 +29,23 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import joblib
 import os
 
+print ("\nBeginning stackingClassifier.py. This one might take a while (5-10 minutes)\n")
+
+##################
+# set font sizes #
+##################
+SMALL_SIZE = 10
+MEDIUM_SIZE = 14
+BIGGER_SIZE = 18
+
+plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=BIGGER_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=MEDIUM_SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=MEDIUM_SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
 # Make directory if does not exist
 path = "hyperparameterOptimization"
 # Check whether the specified path exists or not
@@ -46,6 +63,15 @@ if not isExist:
 
    # Create a new directory because it does not exist
    os.makedirs(path)
+
+# Make directory if does not exist
+path = "optimizedModels"
+# Check whether the specified path exists or not
+isExist = os.path.exists(path)
+if not isExist:
+
+   # Create a new directory because it does not exist
+   os.makedirs(path)   
 
 # Return: X and y vectors
 def read_train():
@@ -177,8 +203,8 @@ for name, model in models:
 # re-initialize models using best parameter settings
 optimized_models = []
 optimized_models.append(('LR', LogisticRegression(multi_class='ovr', C=best_params['LR']['C'], class_weight=best_params['LR']['class_weight'], solver=best_params['LR']['solver'], max_iter=best_params['LR']['max_iter'], random_state=2)))
-optimized_models.append(('RF', RandomForestClassifier(n_estimators=best_params['RF']['n_estimators'], max_samples=best_params['RF']['max_samples'], max_depth=best_params['RF']['max_depth'], criterion=best_params['RF']['criterion'], random_state=2)))
 optimized_models.append(('KNN', KNeighborsClassifier(n_neighbors=best_params['KNN']['n_neighbors'])))
+optimized_models.append(('RF', RandomForestClassifier(n_estimators=best_params['RF']['n_estimators'], max_samples=best_params['RF']['max_samples'], max_depth=best_params['RF']['max_depth'], criterion=best_params['RF']['criterion'], random_state=2)))
 optimized_models.append(('SVC', SVC(gamma='auto',C=best_params['SVC']['C'], kernel=best_params['SVC']['kernel'], class_weight=best_params['SVC']['class_weight'], degree=best_params['SVC']['degree'], random_state=2)))
 optimized_models.append(('NB', GaussianNB(var_smoothing=best_params['NB']['var_smoothing'])))
 optimized_models.append(('MLP', MLPClassifier (activation=best_params['MLP']['activation'], hidden_layer_sizes=best_params['MLP']['hidden_layer_sizes'], solver = best_params['MLP']['solver'], alpha = best_params['MLP']['alpha'], learning_rate=best_params['MLP']['learning_rate'], learning_rate_init = 1e-05, max_iter=100000, random_state=2)))
@@ -235,3 +261,5 @@ for name, model in optimized_models:
     plt.xlabel('Ground truth')
     plt.ylabel('Predicted results')
     plt.savefig(f'confusionMatrices/{name}_ConfusionMatrix.png')
+
+print ("stackingClassifier.py has finished running. The program is complete. Best of luck with your sports betting! ;-)\n")

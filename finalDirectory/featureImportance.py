@@ -16,6 +16,8 @@ import argparse
 import sys
 import os
 
+print ("\nBeginning featureImportance.py.\n")
+
 # Make directory if does not exist
 path = "featureImportance"
 # Check whether the specified path exists or not
@@ -116,3 +118,5 @@ if name == 'df_RFE_all_features':
     axs.set_title("Feature Importance (RFE all features)")
 pyplot.tight_layout()
 pyplot.savefig(f"./featureImportance/feature_Importance_base_RFE_all.png")
+
+print ("featureImportance.py has finished running, on to learningCurves.py\n")

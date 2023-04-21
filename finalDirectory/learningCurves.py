@@ -23,6 +23,8 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 
+print ("\nBeginning learningCurves.py.This one might take few minutes\n")
+
 # Make directory if does not exist
 path = "learningCurves"
 # Check whether the specified path exists or not
@@ -92,3 +94,5 @@ for df in df_list:
                         hspace=0.4)
 
     plt.savefig(f'learningCurves/{name}_LearningCurves.png')    
+
+print ("learningCurves.py has finished running, on to stacking_LearningCurves.py\n")

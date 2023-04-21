@@ -15,6 +15,8 @@ import re
 from sklearn.feature_selection import RFE
 from sklearn.linear_model import LogisticRegression
 
+print ("\nBeginning RFE.py.\n")
+
 # Set the directory where the scaled data are located
 directory = './scaled_training_sets/'
 
@@ -57,14 +59,14 @@ for filename in files:
         new_filename = filename_re.group(1)
 
     df_rfe_clean = pd.concat([merged_df[selected_features_rfe].reset_index(drop=True), df_extra], axis=1)
-    #df_rfe_clean.to_csv(f'./RFE_splits/RFE_{new_filename}.csv', index = False)
+    df_rfe_clean.to_csv(f'./RFE_splits/RFE_{new_filename}.csv', index = False)
 
 ### Creating test set with same features as RFE_training2015-2021_outliers_removed_scaled.csv
 RFE_training = pd.read_csv(f"./RFE_splits/RFE_training2015-2021_outliers_removed_scaled.csv")
 scaled_test_set = pd.read_csv(f"./scaled_training_sets/test_set_outliers_removed_scaled.csv")
 
-scaled_test_set = scaled_test_set.drop([col for col in scaled_test_set.columns if col not in scaled_test_set.columns and col not in RFE_training.columns], axis=1)
-#scaled_test_set.to_csv(f'./RFE_splits/test_RFE_all.csv')
+scaled_test_set = scaled_test_set.drop([col for col in scaled_test_set.columns if col not in RFE_training.columns], axis=1)
+scaled_test_set.to_csv(f'./RFE_splits/test_RFE_all.csv', index=False)
 
 # This code should loop over all files in the scaled_training_sets directory and only process the ones with the .csv file extension and ending with RFE.csv. It then loads each data frame from the CSV file and stores it in a dictionary using the file name as the key. Finally, it creates a list of column names for each data frame and prints them to the console.
 directory = "RFE_splits"
@@ -97,10 +99,28 @@ test = pd.read_csv('./scaled_training_sets/test_set_outliers_removed_scaled.csv'
 train2015_2021 = train2015_2021.loc[:, common_cols]
 test = test.loc[:, common_cols]
 
+df_extra_train = train2015_2021[['team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd', 'wl_home']]
+df_extra_test = test[['team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd', 'wl_home']]
+# print(df_extra_train)
+# print(df_extra_test)
+
+train2015_2021 = train2015_2021.drop(['team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd', 'wl_home'], axis=1)
+test = test.drop(['team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd', 'wl_home'], axis=1)
+# print(train2015_2021)
+# print(test)
+train2015_2021 = pd.concat([train2015_2021,df_extra_train], axis=1)
+test = pd.concat([test,df_extra_test], axis=1)
+#print(train2015_2021)
+#print(test)
+
+
 # Re-index columns to be in same order as the rest of the datasets
-train2015_2021 = train2015_2021.reindex(columns=['percent_3pt', 'percent_2pt', 'DRB', 'ORB', 'TRB', 'STL', 'DRtg', 'NRtg', 'TS.','team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd','wl_home'])
-test = test.reindex(columns=['percent_3pt', 'percent_2pt', 'DRB', 'ORB', 'TRB', 'STL', 'DRtg', 'NRtg', 'TS.','team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd','wl_home'])
+# train2015_2021 = train2015_2021.reindex(columns=['percent_3pt', 'percent_2pt', 'DRB', 'ORB', 'TRB', 'STL', 'DRtg', 'NRtg', 'TS.','team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd','wl_home'])
+# test = test.reindex(columns=['percent_3pt', 'percent_2pt', 'DRB', 'ORB', 'TRB', 'STL', 'DRtg', 'NRtg', 'TS.','team_abbreviation_home', 'team_abbreviation_away', 'game_date', 'game_yearEnd','wl_home'])
+
 
 # Create new csvs for downstream use
 train2015_2021.to_csv('./RFE_splits/train2015_2021_RFEcommon.csv', index=False)
 test.to_csv('./RFE_splits/test_RFEcommon.csv', index = False)    
+
+print ("RFE.py has finished running, on to featureImportance.py\n")
