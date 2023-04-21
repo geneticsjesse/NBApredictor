@@ -28,6 +28,7 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import joblib
 import os
+import researchpy as rp
 
 print ("\nBeginning stackingClassifier.py. This one might take a while (5-10 minutes)\n")
 
@@ -239,6 +240,15 @@ ax2.set_ylabel('Matthews Correlation Coefficient')
 fig2.savefig(f"./hyperparameterOptimization/modelComparison_afterOptimization.png")
 plt.close(fig2)
 #plt.show()
+
+# Compute a paired t-test to determine if the model hyperparameters are significantly different before and after optimization.
+print ('\n Computing a paired t-test to determine if the model hyperparameters are significantly different before and after optimization.')
+print('--------------------------')
+before_opt = pd.Series([0.267966,0.229173,0.234368,0.262041,0.258832,0.203068 ,0.255868])
+after_opt = pd.Series([0.267966,0.227546,0.235536,0.258832,0.262041,0.245072,0.251862])
+
+summary, results = rp.ttest(before_opt, after_opt, paired=True)
+print("The results of the t-test are below\n\n", results)
 
 # fit and save optimized models
 for name, model in optimized_models:
