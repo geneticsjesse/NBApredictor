@@ -61,7 +61,7 @@ for df in df_list:
         "n_jobs": 4,
         "line_kw": {"marker": "o"},
         "std_display_style": "fill_between",
-        "score_name": "MCC",
+        "score_name": "Matthew's Correlation Coefficient",
     }
     # Create a for loop to create a plot for each model and the corresponding learning curve
     for ax_idx, estimator in zip(ax.ravel(), model_list):

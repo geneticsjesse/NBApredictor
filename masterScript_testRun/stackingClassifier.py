@@ -39,7 +39,7 @@ def read_train():
 # separate input and output variables
     varray  = df_slice.values
     nc      = len(varray[0,:])-1
-    X       = varray[:,0:nc] #0-18 typically
+    X       = varray[:,0:nc] 
     Y       = varray[:,nc]
     return X, Y
 
@@ -67,12 +67,12 @@ X_test, y_test = read_test()
 # get a stacking ensemble of models
 def get_stacking():
  level0 = list()
- level0.append(('lr', LogisticRegression(max_iter=10000000, random_state=2)))
- level0.append(('knn', KNeighborsClassifier()))
- level0.append(('rf', RandomForestClassifier (random_state=2)))
- level0.append(('svm', SVC(gamma='auto', random_state=2)))
+ level0.append(('LR', LogisticRegression(max_iter=10000000, random_state=2)))
+ level0.append(('KNN', KNeighborsClassifier()))
+ level0.append(('RF', RandomForestClassifier (random_state=2)))
+ level0.append(('SVC', SVC(gamma='auto', random_state=2)))
  level0.append(('NB', GaussianNB()))
- level0.append(('mlp', MLPClassifier(random_state=2)))
+ level0.append(('MLP', MLPClassifier(random_state=2)))
  
  # define meta learner model
  level1 = LogisticRegression()
@@ -82,13 +82,13 @@ def get_stacking():
 
 # initialize models
 models = []
-models.append(('lr', LogisticRegression(solver='liblinear', multi_class='ovr', random_state=0)))
-models.append (('knn', KNeighborsClassifier()))
-models.append(('rf', RandomForestClassifier (random_state=0)))
-models.append (('svm', SVC(gamma='auto', random_state=0)))
-models.append(('nb', GaussianNB()))
-models.append(('mlp', MLPClassifier(random_state=0)))
-models.append(('stacking', get_stacking()))
+models.append(('LR', LogisticRegression(solver='liblinear', multi_class='ovr', random_state=0)))
+models.append (('KNN', KNeighborsClassifier()))
+models.append(('RF', RandomForestClassifier (random_state=0)))
+models.append (('SVC', SVC(gamma='auto', random_state=0)))
+models.append(('NB', GaussianNB()))
+models.append(('MLP', MLPClassifier(random_state=0)))
+models.append(('Stacking', get_stacking()))
 
 # evaluate a given model using cross-validation
 print('\nModel evalution - training')
@@ -106,7 +106,7 @@ fig1,ax1 = plt.subplots(figsize = (10, 7))
 plot1=ax1.boxplot(results, labels=names, showmeans=True)
 ax1.set_title('Algorithm Comparison - before optimization')
 ax1.set_ylabel('Matthews Correlation Coefficient')
-fig1.savefig(f"./hyperparameterOptimization/modelComparison_beforeOptimization_mlptest.png")
+fig1.savefig(f"./hyperparameterOptimization/modelComparison_beforeOptimization.png")
 plt.close(fig1)
 #plt.show()
 
@@ -115,37 +115,37 @@ print('\nModel evaluation - hyper-parameter tuning')
 print('-----------------------------------------')
 
 model_params = dict()
-model_params['lr'] = dict()
-model_params['lr']['C'] = list(arange(0.1,2,0.1))
-model_params['lr']['class_weight']=['balanced']
-model_params['lr']['solver'] = ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga']
-model_params['lr']['max_iter']=list(arange(100,10000000, 100))
-model_params['knn'] = dict()
-model_params['knn']['n_neighbors'] = list(arange(1,30,2))
-model_params['knn']['leaf_size'] = list(arange(10,50,10))
-model_params['knn']['metric'] = ['euclidean', 'manhattan', 'chebyshev', 'minkowski', 'hamming', 'braycurtis']
-model_params['rf'] = dict()
-model_params['rf']['n_estimators']=list(arange(1,1000,100))
-model_params['rf']['max_samples']=list(arange(0.1,0.9,0.1))
-model_params['rf']['max_depth']=list(arange(1,26,1))
-model_params['rf']['criterion']=['gini', 'entropy']
-model_params['rf']['max_features']=list(arange(1,17,1))
-model_params['nb'] = dict()
-model_params['nb']['var_smoothing'] = list(arange(1e-10,1e-08,1e-9))
-model_params['svm'] = dict()
-model_params['svm']['C'] = list(arange(0.01,2.0,0.2))
-model_params['svm']['kernel'] = ['poly', 'rbf', 'sigmoid']
-model_params['svm']['class_weight']=['balanced']
-model_params['svm']['degree'] = list(arange(1,3,1))
-model_params['mlp'] = dict()
-model_params['mlp']['activation'] = ['tanh', 'relu']
-model_params['mlp']['hidden_layer_sizes'] = [(50,50,50), (50,100,50), (100,)]
-model_params['mlp']['solver'] = ['sgd', 'adam']
-model_params['mlp']['alpha'] = list(arange(0.0001, 0.001, 0.0001))
-model_params['mlp']['learning_rate'] = ['constant','adaptive']
-model_params['stacking'] = dict()
-model_params['stacking']['cv'] = list(arange(0,10,2))
-model_params['stacking']['final_estimator'] = [LogisticRegression(max_iter=10000000), SVC()]
+model_params['LR'] = dict()
+model_params['LR']['C'] = list(arange(0.1,2,0.1))
+model_params['LR']['class_weight']=['balanced']
+model_params['LR']['solver'] = ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga']
+model_params['LR']['max_iter']=list(arange(100,10000000, 100))
+model_params['KNN'] = dict()
+model_params['KNN']['n_neighbors'] = list(arange(1,30,2))
+model_params['KNN']['leaf_size'] = list(arange(10,50,10))
+model_params['KNN']['metric'] = ['euclidean', 'manhattan', 'chebyshev', 'minkowski', 'hamming', 'braycurtis']
+model_params['RF'] = dict()
+model_params['RF']['n_estimators']=list(arange(1,1000,100))
+model_params['RF']['max_samples']=list(arange(0.1,0.9,0.1))
+model_params['RF']['max_depth']=list(arange(1,26,1))
+model_params['RF']['criterion']=['gini', 'entropy']
+model_params['RF']['max_features']=list(arange(1,17,1))
+model_params['NB'] = dict()
+model_params['NB']['var_smoothing'] = list(arange(1e-10,1e-08,1e-9))
+model_params['SVC'] = dict()
+model_params['SVC']['C'] = list(arange(0.01,2.0,0.2))
+model_params['SVC']['kernel'] = ['poly', 'rbf', 'sigmoid']
+model_params['SVC']['class_weight']=['balanced']
+model_params['SVC']['degree'] = list(arange(1,3,1))
+model_params['MLP'] = dict()
+model_params['MLP']['activation'] = ['tanh', 'relu']
+model_params['MLP']['hidden_layer_sizes'] = [(50,50,50), (50,100,50), (100,)]
+model_params['MLP']['solver'] = ['sgd', 'adam']
+model_params['MLP']['alpha'] = list(arange(0.0001, 0.001, 0.0001))
+model_params['MLP']['learning_rate'] = ['constant','adaptive']
+model_params['Stacking'] = dict()
+model_params['Stacking']['cv'] = list(arange(0,10,2))
+model_params['Stacking']['final_estimator'] = [LogisticRegression(max_iter=10000000), SVC()]
 
 best_params = dict()
 for name, model in models:
@@ -157,23 +157,23 @@ for name, model in models:
 
 # re-initialize models using best parameter settings
 optimized_models = []
-optimized_models.append(('lr', LogisticRegression(multi_class='ovr', C=best_params['lr']['C'], class_weight=best_params['lr']['class_weight'], solver=best_params['lr']['solver'], max_iter=best_params['lr']['max_iter'], random_state=2)))
-optimized_models.append(('rf', RandomForestClassifier(n_estimators=best_params['rf']['n_estimators'], max_samples=best_params['rf']['max_samples'], max_depth=best_params['rf']['max_depth'], criterion=best_params['rf']['criterion'], random_state=2)))
-optimized_models.append(('knn', KNeighborsClassifier(n_neighbors=best_params['knn']['n_neighbors'])))
-optimized_models.append(('nb', GaussianNB(var_smoothing=best_params['nb']['var_smoothing'])))
-optimized_models.append(('svm', SVC(gamma='auto',C=best_params['svm']['C'], kernel=best_params['svm']['kernel'], class_weight=best_params['svm']['class_weight'], degree=best_params['svm']['degree'], random_state=2)))
-optimized_models.append(('mlp', MLPClassifier (activation=best_params['mlp']['activation'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], solver = best_params['mlp']['solver'], alpha = best_params['mlp']['alpha'], learning_rate=best_params['mlp']['learning_rate'], learning_rate_init = 1e-05, max_iter=100000, random_state=2)))
+optimized_models.append(('LR', LogisticRegression(multi_class='ovr', C=best_params['LR']['C'], class_weight=best_params['LR']['class_weight'], solver=best_params['LR']['solver'], max_iter=best_params['LR']['max_iter'], random_state=2)))
+optimized_models.append(('KNN', KNeighborsClassifier(n_neighbors=best_params['KNN']['n_neighbors'])))
+optimized_models.append(('RF', RandomForestClassifier(n_estimators=best_params['RF']['n_estimators'], max_samples=best_params['RF']['max_samples'], max_depth=best_params['RF']['max_depth'], criterion=best_params['RF']['criterion'], random_state=2)))
+optimized_models.append(('SVC', SVC(gamma='auto',C=best_params['SVC']['C'], kernel=best_params['SVC']['kernel'], class_weight=best_params['SVC']['class_weight'], degree=best_params['SVC']['degree'], random_state=2)))
+optimized_models.append(('NB', GaussianNB(var_smoothing=best_params['NB']['var_smoothing'])))
+optimized_models.append(('MLP', MLPClassifier (activation=best_params['MLP']['activation'], hidden_layer_sizes=best_params['MLP']['hidden_layer_sizes'], solver = best_params['MLP']['solver'], alpha = best_params['MLP']['alpha'], learning_rate=best_params['MLP']['learning_rate'], learning_rate_init = 1e-05, max_iter=100000, random_state=2)))
 
 # create a list of tuples containing the optimized models and their names to use for appending our stacking classifier to the optimized models list
-optimized_models_forStacking = [('lr', LogisticRegression(C=best_params['lr']['C'], class_weight=best_params['lr']['class_weight'], max_iter=best_params['lr']['max_iter'], multi_class='ovr', random_state=2, solver=best_params['lr']['solver'])),
-    ('rf', RandomForestClassifier(criterion=best_params['rf']['criterion'], max_depth=best_params['rf']['max_depth'], max_samples=best_params['rf']['max_samples'], n_estimators=best_params['rf']['n_estimators'], random_state=2)),
-    ('knn', KNeighborsClassifier(n_neighbors=best_params['knn']['n_neighbors'])),
-    ('nb', GaussianNB(var_smoothing=best_params['nb']['var_smoothing'])),
-    ('svm', SVC(C=best_params['svm']['C'], class_weight=best_params['svm']['class_weight'], degree=best_params['svm']['degree'], gamma='auto', kernel=best_params['svm']['kernel'], random_state=2)),
-    ('mlp', MLPClassifier(activation=best_params['mlp']['activation'], alpha=best_params['mlp']['alpha'], hidden_layer_sizes=best_params['mlp']['hidden_layer_sizes'], learning_rate=best_params['mlp']['learning_rate'], max_iter=10000, learning_rate_init = 1e-05, random_state=2, solver=best_params['mlp']['solver']))
+optimized_models_forStacking = [('LR', LogisticRegression(C=best_params['LR']['C'], class_weight=best_params['LR']['class_weight'], max_iter=best_params['LR']['max_iter'], multi_class='ovr', random_state=2, solver=best_params['LR']['solver'])),
+    ('RF', RandomForestClassifier(criterion=best_params['RF']['criterion'], max_depth=best_params['RF']['max_depth'], max_samples=best_params['RF']['max_samples'], n_estimators=best_params['RF']['n_estimators'], random_state=2)),
+    ('KNN', KNeighborsClassifier(n_neighbors=best_params['KNN']['n_neighbors'])),
+    ('SVC', SVC(C=best_params['SVC']['C'], class_weight=best_params['SVC']['class_weight'], degree=best_params['SVC']['degree'], gamma='auto', kernel=best_params['SVC']['kernel'], random_state=2)),
+    ('NB', GaussianNB(var_smoothing=best_params['NB']['var_smoothing'])),
+    ('MLP', MLPClassifier(activation=best_params['MLP']['activation'], alpha=best_params['MLP']['alpha'], hidden_layer_sizes=best_params['MLP']['hidden_layer_sizes'], learning_rate=best_params['MLP']['learning_rate'], max_iter=10000, learning_rate_init = 1e-05, random_state=2, solver=best_params['MLP']['solver']))
 ]
 # Need to append stacking to optimized models
-optimized_models.append(('stacking', StackingClassifier(estimators= optimized_models_forStacking, cv = best_params['stacking']['cv'], final_estimator=best_params['stacking']['final_estimator'])))
+optimized_models.append(('Stacking', StackingClassifier(estimators= optimized_models_forStacking, cv = best_params['Stacking']['cv'], final_estimator=best_params['Stacking']['final_estimator'])))
 
 print('\nModel evalution - optimized')
 print('--------------------------')
@@ -191,7 +191,7 @@ fig2,ax2 = plt.subplots(figsize = (10, 7))
 plot2=ax2.boxplot(results, labels=names, showmeans=True)
 ax2.set_title('Algorithm Comparison - after optimization')
 ax2.set_ylabel('Matthews Correlation Coefficient')
-fig2.savefig(f"./hyperparameterOptimization/modelComparison_afterOptimization_mlptest.png")
+fig2.savefig(f"./hyperparameterOptimization/modelComparison_afterOptimization.png")
 plt.close(fig2)
 #plt.show()
 
@@ -215,4 +215,4 @@ for name, model in optimized_models:
     plt.title('Confusion matrix corresp. to test results for ' + name)
     plt.xlabel('Ground truth')
     plt.ylabel('Predicted results')
-    plt.savefig(f'confusionMatrices/{name}_ConfusionMatrix_mlptest.png')
+    plt.savefig(f'confusionMatrices/{name}_ConfusionMatrix.png')
