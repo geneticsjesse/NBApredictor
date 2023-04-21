@@ -250,6 +250,8 @@ after_opt = pd.Series([0.267966,0.227546,0.235536,0.258832,0.262041,0.245072,0.2
 summary, results = rp.ttest(before_opt, after_opt, paired=True)
 print("The results of the t-test are below\n\n", results)
 
+print ('\n The hyperparameter values were not significantly different before and after hyperparameter optimization (t=-0.868, df=6, p=0.42\n')
+
 # fit and save optimized models
 for name, model in optimized_models:
 	model.fit(X_train, y_train)
