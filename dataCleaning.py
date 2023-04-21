@@ -92,14 +92,14 @@ plt.pie(wl_home_count_list,
                       'antialiased': True})
 plt.title("Win/Loss Home Distribution")
 plt.tight_layout()
-plt.savefig(f"./dataExplorationPlots/wl_home_piechart.png")
+plt.savefig(f"./dataExploration/wl_home_piechart.png")
 #plt.show()
 
 # histograms
 merged_df.iloc[:, 12:].hist()
 plt.tight_layout()
 #plt.show()
-plt.savefig(f"./dataExplorationPlots/featuresHistogram.png")
+plt.savefig(f"./dataExploration/featuresHistogram.png")
 
 # The pie chart produced above shows us the home team wins ~57% of the time, meaning we will need to stratify our data when performing cross validation, to avoid an imbalanced training/testing split.
 
@@ -152,12 +152,12 @@ for col in merged_df.columns[12:]:
         # else:
         #     print(f"Subsample {i+1}: Not normal (p={p:.3f})")
     if normal_count >= 6:
-        print(f"{col} IS NORMAL!")
+        #print(f"{col} IS NORMAL!")
         normal_col_list.append(col)
     else:
-        print(f"{col} IS NOT NORMAL!")
+       # print(f"{col} IS NOT NORMAL!")
         notnormal_col_list.append(col)
 print(f"List of normal columns:", normal_col_list)
 print(f"List of not normal columns:", notnormal_col_list)
 
-print ("dataCleaning.py has finished running, on to trainTestSplit.py\n")
+print ("\ndataCleaning.py has finished running, on to trainTestSplit.py\n")
