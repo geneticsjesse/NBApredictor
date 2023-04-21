@@ -5,6 +5,7 @@
 # Date:     March 15, 2023
 
 # How to run:   python3  dataCleaning.py  -gamedata gamedata.csv -teamdata combinedTeamData.csv
+# This script takes in raw game and team data, cleans, and merges them into a single dataframe. It also performs some initial data exploration and generates plots.
 # ================= #
 
 # Import relevant libraries
@@ -12,6 +13,17 @@ import pandas as pd
 import argparse
 import sys
 import matplotlib.pyplot as plt 
+import os 
+# Make directory if does not exist
+path = "dataExploration"
+# Check whether the specified path exists or not
+isExist = os.path.exists(path)
+if not isExist:
+
+   # Create a new directory because it does not exist
+   os.makedirs(path)
+
+print ("\nBeginning dataCleaning.py.\n")
 
 # define command line arguments
 parser = argparse.ArgumentParser(description='Data cleaning')
@@ -45,8 +57,7 @@ teamdat_cleaned = teamdat[['Team', 'FG.', 'X3P.', 'X2P.', 'FT.', 'DRB', 'ORB', '
 # Left merging dataframes to create a master data frame
 merged_df = pd.merge(gamedat_cleaned, teamdat_cleaned, on=['game_yearEnd', 'Team'], how='left')
 
-# summarize data #
-# -------------- #
+# summarize data
 print('Data summarization')
 print('------------------')
 # shape
@@ -61,16 +72,7 @@ print('\nSummary stats of data:\n', merged_df.describe())
 # class distribution
 print('\nClass distribution:\n', merged_df.groupby('team_abbreviation_home').size())
 
-# explore data visually #
-# --------------------- #
-
-# box and whisker plots
-merged_df.iloc[:, 12:].plot(kind='box', subplots=True, layout=(4,6), sharex=False, sharey=False)
-plt.show()
-
-# histograms
-merged_df.iloc[:, 12:].hist()
-plt.show()
+# explore data visually
 
 # Pie chart of wl_home
 wl_home_count_list = merged_df["wl_home"].value_counts().tolist()
@@ -86,8 +88,15 @@ plt.pie(wl_home_count_list,
                       'linewidth': 1,
                       'antialiased': True})
 plt.title("Win/Loss Home Distribution")
-plt.savefig(f"wl_home_piechart.png")
-plt.show()
+plt.tight_layout()
+plt.savefig(f"./dataExploration/wl_home_piechart.png")
+# plt.show()
+
+# histograms
+merged_df.iloc[:, 12:].hist()
+plt.tight_layout()
+# plt.show()
+plt.savefig(f"./dataExploration/featuresHistogram.png")
 
 # The pie chart produced above shows us the home team wins ~57% of the time, meaning we will need to stratify our data when performing cross validation, to avoid an imbalanced training/testing split.
 
@@ -99,3 +108,5 @@ print("There are", merged_df.isnull().sum().sum(), "missing values in the merged
 
 # Writing to csv
 merged_df.to_csv('merged_df.csv', index=False)
+
+print ("dataCleaning.py has finished running, on to trainTestSplit.py\n")

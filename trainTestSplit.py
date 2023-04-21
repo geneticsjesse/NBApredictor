@@ -8,14 +8,19 @@
 # ========================================================================= #
 
 import pandas as pd
-from sklearn.model_selection import TimeSeriesSplit
-from sklearn.metrics import mean_squared_error
-import numpy as np
-import statsmodels.api as sm
-from statsmodels.tsa.arima.model import ARIMA
 import pandas as pd
 import argparse
 import sys
+import os
+print ("\nBeginning trainTestSplit.py.\n")
+# Make directory if does not exist
+path = "training_test_splits"
+# Check whether the specified path exists or not
+isExist = os.path.exists(path)
+if not isExist:
+
+   # Create a new directory because it does not exist
+   os.makedirs(path)
 
 # define command line arguments
 parser = argparse.ArgumentParser(description='Data cleaning')
@@ -47,15 +52,8 @@ for i in range(2, len(seasons), 1):
     
     # Write each training split to csv file
     for list in train_set_list:
-        #print(list)
         list.to_csv(f"./training_test_splits/training2015-{season-1}.csv", index=False)
     
 test.to_csv(f"./training_test_splits/testing2022.csv", index=False)
 
-
-
-
-
-
-
-
+print ("trainTestSplit.py has finished running, on to outlierDetect_Scaling.py\n")
