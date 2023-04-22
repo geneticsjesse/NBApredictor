@@ -126,4 +126,4 @@ scaled_df_test['wl_home'] = Y_test
 
 scaled_df_test.to_csv (f'./scaled_training_sets/test_set_outliers_removed_scaled.csv', index = False)
 
-print ("outlierDetect_Scaling.py has finished running, on to RFE.py\n")
+print ("outlierDetect_Scaling.py has finished running, on to RFE.py.\n")

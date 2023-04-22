@@ -56,4 +56,4 @@ for i in range(2, len(seasons), 1):
     
 test.to_csv(f"./training_test_splits/testing2022.csv", index=False)
 
-print ("trainTestSplit.py has finished running, on to outlierDetect_Scaling.py\n")
+print ("trainTestSplit.py has finished running, on to outlierDetect_Scaling.py.\n")

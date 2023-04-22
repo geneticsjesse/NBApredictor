@@ -23,13 +23,14 @@ Pandas
 Scikit-learn
 Matplotlib
 Numpy
+Researchpy
 
-Clone this repository using the following command:
+For the sake of brevity, we have facilitated the creation of a merged_df_subset.csv (as part of the dataCleaning.py script) that will allow you to test the functionality of our pipeline. This .csv file is just a subset of our merged_df.csv that is output by the first script in the master script (dataCleaning.py). If you would like to run the full dataset, you can use the merged_df.csv as input to the second script in our master script (trainTestSplit.py). Using merged_df_subset.csv took approximately 15 minutes to complete on a computer with the following specifications: Intel(R) Core(TM) i5-6500 CPU @ 3.20GHz 3.19 GHz (4 cores; 8GB RAM). 
+
+Note: If the classifier gets stuck at any point, you could consider lowering the number of splits and the number of repeats for the RepeatedStratitifedKFold cross-valdation function on lines 145, 198, and 229 of the stackingClassifier.py script, which should decrease the runtime of the program: 
+kfold = RepeatedStratifiedKFold(n_splits=5, n_repeats=1, random_state=1)
+
+To use the classifier, run 'python3 masterScript_python.py'. The script will read in the two .csv files included (gamedata.csv and combinedTeamData.csv) and perform all the necessary steps to clean the data, split it into training and test sets, detect and remove outliers, scale the features, perform recursive feature selection, compute feature importance, generate learning curves, optimize hyperparameters, and test each model on unseen data.
+
+If you would like to clone this repository, use the following command:
 git clone https://github.com/geneticsjesse/NBApredictor
-
-For the sake of brevity, we have provided a merged_df_subset.csv that will allow you to test the functionality of our pipeline. This .csv file is just a subset of our merged_df.csv that is output by the first script in the master script (dataCleaning.py). If you would like to run the fulldataset, you can use the merged_df.csv as input to the second script in our master script (trainTestSplit.py). Using merged_df_subset.csv took approximately 15 minutes to complete on a computer with the following specifications: Intel(R) Core(TM) i5-6500 CPU @ 3.20GHz 3.19 GHz (4 cores; 8GB RAM). 
-
-Note: If the classifier gets stuck at any point, you could consider lowering the number of splits and the number of repeats for the RepeatedStratitifedKFold cross-valdation function on lines 145, 198, and 229 of the stackingClassifier.py script, which should decrease the runtime of the program:
-    kfold = RepeatedStratifiedKFold(n_splits=5, n_repeats=1, random_state=1)
-
-To use the classifier, run 'python3 masterScript_python.py'. The script will perform all the necessary steps to clean the data, split it into training and test sets, detect and remove outliers, scale the features, perform recursive feature selection, compute feature importance, generate learning curves, optimize hyperparameters, and test each model on unseen data.

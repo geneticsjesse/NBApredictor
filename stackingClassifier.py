@@ -30,7 +30,7 @@ import joblib
 import os
 import researchpy as rp
 
-print ("\nBeginning stackingClassifier.py. This one might take a while (5-10 minutes)\n")
+print ("\nBeginning stackingClassifier.py. This one might take a while (5-10 minutes).\n")
 
 ##################
 # set font sizes #

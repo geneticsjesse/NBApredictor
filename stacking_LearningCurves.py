@@ -22,7 +22,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, StackingClassifier
 
-print ("\nBeginning stacking_LearningCurves.py. This one might take a few minutes\n")
+print ("\nBeginning stacking_LearningCurves.py. This one might take a few minutes.\n")
 
 # load the dataset; header is first row
 df_base = pd.read_csv('./scaled_training_sets/training2015-2021_outliers_removed_scaled.csv', header=0)
@@ -82,4 +82,4 @@ for df in df_list:
     name =[x for x in globals() if globals()[x] is df][0]
     plt.savefig(f'learningCurves/{name}_StackingClassifer_LearningCurves.png')
 
-print ("stacking_LearningCurves.py has finished running, on to stackingClassifer.py\n")
+print ("stacking_LearningCurves.py has finished running, on to stackingClassifer.py.\n")

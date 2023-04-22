@@ -123,4 +123,4 @@ test = pd.concat([test,df_extra_test], axis=1)
 train2015_2021.to_csv('./RFE_splits/train2015_2021_RFEcommon.csv', index=False)
 test.to_csv('./RFE_splits/test_RFEcommon.csv', index = False)    
 
-print ("RFE.py has finished running, on to featureImportance.py\n")
+print ("RFE.py has finished running, on to featureImportance.py.\n")

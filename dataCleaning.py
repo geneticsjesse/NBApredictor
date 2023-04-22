@@ -160,4 +160,4 @@ for col in merged_df.columns[12:]:
 print(f"List of normal columns:", normal_col_list)
 print(f"List of not normal columns:", notnormal_col_list)
 
-print ("\ndataCleaning.py has finished running, on to trainTestSplit.py\n")
+print ("\ndataCleaning.py has finished running, on to trainTestSplit.py.\n")
